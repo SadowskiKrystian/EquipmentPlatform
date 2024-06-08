@@ -5,10 +5,10 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.3.0</version>
+		<version>3.2.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
+	<groupId>com.ksprogramming</groupId>
 	<artifactId>Equipment</artifactId>
 	<version>0.0.1</version>
 	<name>Equipment</name>
@@ -31,6 +31,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.session</groupId>
+			<artifactId>spring-session-core</artifactId>
+		</dependency>
 <!--		<dependency>-->
 <!--			<groupId>org.thymeleaf.extras</groupId>-->
 <!--			<artifactId>thymeleaf-extras-springsecurity6</artifactId>-->
@@ -39,14 +43,18 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
-			<optional>true</optional>
 		</dependency>
-		<!-- DATE BASE -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<!-- DATEBASE DRIVERS-->
 		<dependency>
 			<groupId>com.mysql</groupId>
 			<artifactId>mysql-connector-j</artifactId>
-			<scope>runtime</scope>
+			<version>8.3.0</version>
 		</dependency>
+
 		<!-- SPRING SECURITY -->
 <!--		<dependency>-->
 <!--			<groupId>org.springframework.boot</groupId>-->
