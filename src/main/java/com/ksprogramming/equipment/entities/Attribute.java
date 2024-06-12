@@ -1,5 +1,6 @@
 package com.ksprogramming.equipment.entities;
 
+import com.ksprogramming.equipment.data.AttributeData;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

@@ -1,5 +1,6 @@
 package com.ksprogramming.equipment.entities;
 
+import com.ksprogramming.equipment.data.EquipmentData;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -13,7 +14,6 @@ public class Equipment {
     @JoinColumn(name = "user_id")
     private User user;
     private String name;
-
     @Column(name = "create_date")
     private LocalDateTime createDate;
     @Column(name = "edit_date")
