@@ -95,7 +95,7 @@ public class Attribute {
         this.removeDate = removeDate;
     }
 
-    public List<AssignedAttribute> getAssignedAttributesData() {
+    public List<AssignedAttribute> getAssignedAttributes() {
         return assignedAttributes;
     }
 
