@@ -22,7 +22,7 @@ import java.util.Map;
 
 @Service
 @Transactional
-public class EquipmentService {
+public class EquipmentService implements EquipmentServiceInterface{
     private EquipmentRepository equipmentRepository;
     private AttributeRepository attributeRepository;
     private AssignedAttributeRepository assignedAttributeRepository;

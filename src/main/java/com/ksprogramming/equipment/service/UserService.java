@@ -83,10 +83,7 @@ public class UserService implements UserServiceInterface{
         user.setDeleteDate(LocalDateTime.now());
         userRepository.save(equipmentUserDataToEntity(user));
         userAuthorityService.delete(id);
-//        List<UserAuthorityData> userAuthorityDataList = userAuthorityService.findById(id);
-//        if(!userAuthorityDataList.isEmpty()) {
-//            equipmentUserRepository.deleteById(id);
-//        }
+
     }
     private void changePassword(UserData user, String newPassword) {
         user.setPasswordHash(newPassword);

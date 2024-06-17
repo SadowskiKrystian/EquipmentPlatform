@@ -84,6 +84,7 @@ public class AttributeData {
         this.assignedAttributesData = assignedAttributesData;
         this.createDate = createDate;
         this.editDate = editDate;
+        this.removeDate = removeDate;
     }
 
     public AttributeData(String name, String type, String domain, LocalDateTime createDate) {

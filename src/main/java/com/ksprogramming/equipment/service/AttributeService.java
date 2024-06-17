@@ -50,9 +50,9 @@ public class AttributeService implements AttributeServiceInterface{
     }
 
     public void delete(Long id) {
-        Attribute attributeEntity = attributeRepository.getReferenceById(id.intValue());
-        attributeEntity.setRemoveDate(LocalDateTime.now());
-        attributeRepository.save(attributeEntity);
+        AttributeData attribute = attributeEntityToData(attributeRepository.getReferenceById(id.intValue()));
+        attribute.setRemoveDate(LocalDateTime.now());
+        attributeRepository.save(attributeDataToEntity(attribute));
     }
 
     public void update(AttributeData attributeData) {

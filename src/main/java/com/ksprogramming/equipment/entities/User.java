@@ -1,6 +1,7 @@
 package com.ksprogramming.equipment.entities;
 
 import jakarta.persistence.*;
+import org.springframework.context.annotation.Profile;
 
 import java.time.LocalDateTime;
 import java.util.List;
