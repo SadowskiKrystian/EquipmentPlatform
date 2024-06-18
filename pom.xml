@@ -56,10 +56,10 @@
 		</dependency>
 
 		<!-- SPRING SECURITY -->
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.boot</groupId>-->
-<!--			<artifactId>spring-boot-starter-security</artifactId>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
 		<!-- TESTS -->
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -75,7 +75,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>RELEASE</version>
+			<version>LATEST</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
