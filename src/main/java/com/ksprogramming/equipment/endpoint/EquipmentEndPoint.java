@@ -6,6 +6,8 @@ import com.ksprogramming.equipment.service.AssignedAttributeServiceInterface;
 import com.ksprogramming.equipment.service.AttributeServiceInterface;
 import com.ksprogramming.equipment.service.EquipmentServiceInterface;
 import com.ksprogramming.equipment.service.UserServiceInterface;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -14,14 +16,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/crs")
-public class EndPoint {
+public class EquipmentEndPoint {
     private UserServiceInterface userService;
     private EquipmentServiceInterface equipmentService;
     private AttributeServiceInterface attributeService;
     private AssignedAttributeServiceInterface assignedAttributeService;
 
-    public EndPoint(UserServiceInterface userService, EquipmentServiceInterface equipmentService,
-                    AttributeServiceInterface attributeService, AssignedAttributeServiceInterface assignedAttributeService) {
+    public EquipmentEndPoint(UserServiceInterface userService, EquipmentServiceInterface equipmentService,
+                             AttributeServiceInterface attributeService, AssignedAttributeServiceInterface assignedAttributeService) {
         this.userService = userService;
         this.equipmentService = equipmentService;
         this.attributeService = attributeService;

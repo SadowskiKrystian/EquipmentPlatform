@@ -1,8 +1,7 @@
 package com.ksprogramming.equipment.api;
 
-import com.ksprogramming.equipment.domain.equipment.AssignedAttributeData;
-import com.ksprogramming.equipment.domain.equipment.AttributeData;
-
+import com.ksprogramming.equipment.data.AssignedAttributeData;
+import com.ksprogramming.equipment.data.AttributeData;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 

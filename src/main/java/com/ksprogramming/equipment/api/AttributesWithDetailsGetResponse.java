@@ -1,6 +1,6 @@
 package com.ksprogramming.equipment.api;
 
-import com.ksprogramming.equipment.logic.equipment.AttributeType;
+import com.ksprogramming.equipment.enumes.AttributeType;
 
 import java.util.List;
 

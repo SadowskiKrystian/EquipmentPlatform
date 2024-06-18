@@ -1,74 +1,43 @@
-package com.ksprogramming.equipment.api;
+package com.ksprogramming.equipment.endpoint;
 
-import com.ksprogramming.equipment.api.courseplatform.*;
-import com.ksprogramming.equipment.domain.DictionaryData;
-import com.ksprogramming.equipment.domain.courseplatform.*;
-import com.ksprogramming.equipment.domain.equipment.*;
-import com.ksprogramming.equipment.logic.DictionariesService;
-import com.ksprogramming.equipment.logic.DictionaryType;
-import com.ksprogramming.equipment.logic.Language;
-import com.ksprogramming.equipment.logic.courseplatform.*;
-import com.ksprogramming.equipment.logic.courseplatform.notifications.NotificationsFromPanelService;
-import com.ksprogramming.equipment.logic.equipment.*;
+import com.ksprogramming.equipment.api.*;
+import com.ksprogramming.equipment.data.*;
+import com.ksprogramming.equipment.entities.Authority;
+import com.ksprogramming.equipment.enumes.AttributeType;
+import com.ksprogramming.equipment.service.*;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.ksprogramming.equipment.logic.courseplatform.ConverterToResponsesUtil.statisticNewCustomersToResponses;
-
-
 @RestController
 @RequestMapping("/admin/api/crs")
-public class EquipmentEndpointAdmin {
-
-
-    private StatisticService statisticService;
-    private ModulesService modulesService;
-    private MarketingService marketingService;
-    private NotificationsFromPanelService notificationsFromPanelService;
-    private CourseCustomersService courseCustomersService;
-    private ContactsService contactsService;
-    private TraceService traceService;
+public class EquipmentAdminEndPoint {
     private EquipmentServiceInterface equipmentService;
     private AssignedAttributeService assignedAttributeService;
     private AttributeServiceInterface attributeService;
-    private DictionariesService dictionariesService;
-    private EquipmentUserServiceInterface equipmentUserService;
+    private UserServiceInterface userService;
     private UserAuthorityServiceInterface userAuthorityService;
 
-
-    public EquipmentEndpointAdmin(CourseAttachmentsService courseAttachmentsService, StatisticService statisticService,
-                                  ModulesService modulesService, MarketingService marketingService, NotificationsFromPanelService notificationsFromPanelService,
-                                  CourseCustomersService courseCustomersService, ContactsService contactsService, TraceService traceService,
-                                  EquipmentServiceInterface equipmentService, AssignedAttributeService assignedAttributeService, AttributeServiceInterface attributeService,
-                                  DictionariesService dictionariesService, EquipmentUserServiceInterface equipmentUserService, UserAuthorityServiceInterface userAuthorityService) {
-        this.statisticService = statisticService;
-        this.modulesService = modulesService;
-        this.marketingService = marketingService;
-        this.notificationsFromPanelService = notificationsFromPanelService;
-        this.courseCustomersService = courseCustomersService;
-        this.contactsService = contactsService;
-        this.traceService = traceService;
+    public EquipmentAdminEndPoint(EquipmentServiceInterface equipmentService, AssignedAttributeService assignedAttributeService,
+                                  AttributeServiceInterface attributeService, UserServiceInterface userService,
+                                  UserAuthorityServiceInterface userAuthorityService) {
         this.equipmentService = equipmentService;
         this.assignedAttributeService = assignedAttributeService;
         this.attributeService = attributeService;
-        this.dictionariesService = dictionariesService;
-        this.equipmentUserService = equipmentUserService;
+        this.userService = userService;
         this.userAuthorityService = userAuthorityService;
     }
 
-    @GetMapping("/equipment-users")
+    @GetMapping("/users")
     public List<EquipmentUserGetResponse> findAllEquipmentUsers() {
-        return equipmentUsersDataToResponse(equipmentUserService.findAll());
+        return equipmentUsersDataToResponse(userService.findAll());
     }
 
-    @PostMapping("/equipment-users")
-    public void createUser(@RequestBody EquipmentUserPostRequest request, HttpServletRequest httpServletRequest) {
-        equipmentUserService.registerUser(new EquipmentUserData(
+    @PostMapping("/user")
+    public void createUser(@RequestBody EquipmentUserPostRequest request) {
+        userService.registerUser(new UserData(
                 request.getLogin(),
                 request.getPasswordHash(),
                 false,
@@ -76,38 +45,24 @@ public class EquipmentEndpointAdmin {
                 userAuthoritiesArrayToList(request.getAuthorities()),
                 LocalDateTime.now()));
     }
-    @PutMapping("/equipment-user/{id}")
+    @PutMapping("/user/{id}")
     public void updateUser(@PathVariable Long id, @RequestBody EquipmentUserPutRequest equipmentUserPutRequest) {
-        equipmentUserService.update(equipmentUserPutRequestToData(id, equipmentUserPutRequest));
+        userService.update(equipmentUserPutRequestToData(id, equipmentUserPutRequest));
     }
 
 
-    @DeleteMapping("/equipment-user/{id}")
+    @DeleteMapping("/user/{id}")
     public void deleteUser(@PathVariable Long id) {
-        equipmentUserService.delete(id);
+        userService.delete(id);
     }
-    @PutMapping("/equipment-user-change-password/{id}")
+    @PutMapping("/user-change-password/{id}")
     public void changePassword(@PathVariable Long id, @RequestBody ChangePasswordRequest request) {
-        equipmentUserService.changePasswordAdmin(id, request.getNewPasswordHash());
+        userService.changePasswordAdmin(id, request.getNewPasswordHash());
     }
     @GetMapping("/authority/{id}")
     public List<UserAuthorityGetResponse> findAuthorityById(@PathVariable Long id) {
         return userAuthoritiesDataToGetResponse(userAuthorityService.findById(id));
     }
-
-    @GetMapping("/customers")
-    public List<CustomerGetResponse> getCustomers(
-            @RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-            @RequestParam(name = "page_size", required = false, defaultValue = "10") Long pageSize,
-            @RequestParam(name = "login", required = false) String loginLike,
-            @RequestParam(name = "invoice_first_and_last_name", required = false) String invoiceFirstAndLastName
-    ) {
-        List<CustomerData> customers = courseCustomersService.find(new CustomersFilter(loginLike, page, pageSize, invoiceFirstAndLastName));
-        return customersToResponses(customers);
-    }
-
-
-
     @GetMapping("/attribute/{id}")
     public AttributeWithDetailsGetResponse getAttribute(@PathVariable Long id) {
         return new AttributeWithDetailsGetResponse(attributeDataToResponse(attributeService.getAttribute(id)), assignedAttributeDataToResponse(assignedAttributeService.getAttributeWithValues(id)));
@@ -141,7 +96,7 @@ public class EquipmentEndpointAdmin {
 
     @PostMapping("/equipment")
     public void createEquipment(@RequestBody EquipmentPostRequest equipmentPostRequest) {
-        EquipmentData equipment = new EquipmentData(equipmentUserService.getLoggedUser(), equipmentPostRequest.getName(), LocalDateTime.now());
+        EquipmentData equipment = new EquipmentData(userService.getLoggedUser(), equipmentPostRequest.getName(), LocalDateTime.now());
         equipmentService.create(equipment, valuesPostRequestToData(equipmentPostRequest.getValues()));
     }
 
@@ -168,42 +123,9 @@ public class EquipmentEndpointAdmin {
 
     @PutMapping("/equipment/{id}")
     public void updateEquipment(@PathVariable Long id, @RequestBody EquipmentPutRequest request) {
-        EquipmentData equipment = new EquipmentData(equipmentUserService.getLoggedUser(), request.getName(), LocalDateTime.now());
+        EquipmentData equipment = new EquipmentData(userService.getLoggedUser(), request.getName(), LocalDateTime.now());
         equipmentService.update(equipment, valuesPutRequestToData(request.getValues()));
 
-    }
-
-    @PutMapping("/customer/{id}")
-    public void updateCustomer(@PathVariable Long id, @RequestBody CustomerPutRequest request) {
-        CustomerData data = courseCustomersService.get(id);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        courseCustomersService.update(new CustomerData(id, request.getLogin(), data.getPasswordHash(), request.getLanguage(),
-                request.getInvoiceType(), request.getInvoiceCompanyName(), request.getInvoiceStreet(), request.getInvoicePostalCode(),
-                request.getInvoiceCity(), request.getInvoiceNip(), request.getInvoiceCountry(), request.getRegulationAccepted(),
-                request.getNewsletterAccepted(), request.getInvoiceFirstAndLastName(),
-                request.getIsEnabled(), request.getIsEmailConfirmed(), LocalDateTime.parse(request.getRegistrationDatetime(), formatter),
-                request.getAuthorities()));
-    }
-
-
-    @DeleteMapping("/customer/{id}")
-    public void deleteCustomer(@PathVariable Long id) {
-        courseCustomersService.delete(id);
-    }
-
-    @GetMapping("/statistic/new-customers")
-    public List<StatisticNewCustomerGetResponse> newCustomers() {
-        return statisticNewCustomersToResponses(statisticService.findNewCustomers());
-    }
-
-    @PostMapping("/notifications")
-    public void createNotifications(@RequestBody NotificationsPostRequest request) {
-        notificationsFromPanelService.createNotifications(new CreateNotificationsParameters(request));
-    }
-
-    @GetMapping("/dictionaries")
-    public List<DictionaryData> getAttributesTypeDictionary() {
-        return dictionariesService.getDictionary(DictionaryType.ATTRIBUTE_TYPES, Language.PL);
     }
     private List<ValueData> valuesPostRequestToData(List<ValuePostRequest> values) {
         List<ValueData> list = new ArrayList<>();
@@ -213,17 +135,17 @@ public class EquipmentEndpointAdmin {
         return list;
     }
 
-    private EquipmentUserData equipmentUserPutRequestToData(Long id, EquipmentUserPutRequest equipmentUserPutRequest) {
-        EquipmentUserData equipmentUserData = new EquipmentUserData(id, equipmentUserPutRequest.getLogin(),
+    private UserData equipmentUserPutRequestToData(Long id, EquipmentUserPutRequest equipmentUserPutRequest) {
+        UserData userData = new UserData(id, equipmentUserPutRequest.getLogin(),
                 equipmentUserPutRequest.getEmailConfirmed(), equipmentUserPutRequest.getLanguage(),
                 userAuthoritiesArrayToList(equipmentUserPutRequest.getAuthorities()));
-        return equipmentUserData;
+        return userData;
     }
 
     private List<UserAuthorityData> userAuthoritiesArrayToList(String[] authorities) {
         List<UserAuthorityData> list = new ArrayList<>();
         for(String authority : authorities){
-            list.add(new UserAuthorityData(CustomerAuthority.valueOf(authority).getCodeWithRole()));
+            list.add(new UserAuthorityData(Authority.valueOf(authority).getCodeWithRole()));
         }
         return list;
     }
@@ -233,19 +155,19 @@ public class EquipmentEndpointAdmin {
         userAuthorityDataList.stream()
                 .forEach(authority -> {
                     userAuthorityGetResponseList.add(new UserAuthorityGetResponse(authority.getId(),
-                            equipmentUserDataToGetResponse(authority.getEquipmentUserData()),
-                            CustomerAuthority.findByCodeWithRole(authority.getAuthority()).toString()));
+                            equipmentUserDataToGetResponse(authority.getUserData()),
+                            Authority.findByCodeWithRole(authority.getAuthority()).toString()));
                 });
 
         return userAuthorityGetResponseList;
     }
 
-    private EquipmentUserGetResponse equipmentUserDataToGetResponse(EquipmentUserData equipmentUserData) {
+    private EquipmentUserGetResponse equipmentUserDataToGetResponse(UserData equipmentUserData) {
         return new EquipmentUserGetResponse(equipmentUserData.getId(), equipmentUserData.getLogin(), equipmentUserData.getPasswordHash(),
                 equipmentUserData.getEmailConfirmed(), equipmentUserData.getLanguage(), equipmentUserData.getRegistrationDate());
     }
 
-    private List<EquipmentUserGetResponse> equipmentUsersDataToResponse(List<EquipmentUserData> equipmentUserData) {
+    private List<EquipmentUserGetResponse> equipmentUsersDataToResponse(List<UserData> equipmentUserData) {
         List<EquipmentUserGetResponse> list = new ArrayList<>();
         equipmentUserData.stream()
                 .forEach(user -> {
@@ -268,13 +190,7 @@ public class EquipmentEndpointAdmin {
         return attributes;
     }
 
-    private List<CustomerGetResponse> customersToResponses(List<CustomerData> customers) {
-        List<CustomerGetResponse> list = new ArrayList<>();
-        for (CustomerData customer : customers) {
-            list.add(new CustomerGetResponse(customer));
-        }
-        return list;
-    }
+
 
     private static EquipmentWithAttributesGetResponse prepareEquipmentWithAttributesGetResponse(EquipmentData equipmentData, List<AttributeData> assignedAttributesData, List<AttributeData> attributesData) {
         List<AttributeGetResponse> assignedAttributes = new ArrayList<>();
@@ -293,7 +209,7 @@ public class EquipmentEndpointAdmin {
         List<EquipmentGetResponse> equipments = new ArrayList<>();
         equipmentService.findAll().stream()
                 .forEach(equipment -> equipments.add(new EquipmentGetResponse(equipment.getId()
-                        , equipmentUserDataToGetResponse(equipment.getEquipmentUserData())
+                        , equipmentUserDataToGetResponse(equipment.getUserData())
                         , equipment.getName()
                         , equipment.getCreateDate()
                         , equipment.getEditDate())));
