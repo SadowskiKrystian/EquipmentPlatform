@@ -5,6 +5,8 @@ import com.ksprogramming.equipment.data.UserData;
 import com.ksprogramming.equipment.entities.User;
 import com.ksprogramming.equipment.entities.UserAuthority;
 import com.ksprogramming.equipment.repository.UserRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,14 +43,13 @@ public class UserService implements UserServiceInterface{
         return equipmentUsersEntityToData(userRepository.findDidntRemoveUser());
     }
     public UserData getLoggedUser(){
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        List<EquipmentUserData> equipmentUsersData = equipmentUsersEntityToData(equipmentUserRepository.findUserByLogin(authentication.getName()));
-//        if (equipmentUsersData.size() > 0){
-//            return equipmentUsersData.get(0);
-//        }else {
-//            return null;
-//        }
-    return null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        List<UserData> userData = equipmentUsersEntityToData(userRepository.findUserByLogin(authentication.getName()));
+        if (!userData.isEmpty()){
+            return userData.getFirst();
+        }else {
+            return null;
+        }
     }
     public UserData getUserById(Long id){
         UserData user = equipmentUserEntityToData(userRepository.getReferenceById(id.intValue()));
