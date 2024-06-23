@@ -2,6 +2,7 @@ package com.ksprogramming.equipment.service;
 
 import com.ksprogramming.equipment.data.UserAuthorityData;
 import com.ksprogramming.equipment.data.UserData;
+import com.ksprogramming.equipment.entities.Authority;
 import com.ksprogramming.equipment.entities.User;
 import com.ksprogramming.equipment.entities.UserAuthority;
 import com.ksprogramming.equipment.repository.UserAuthorityRepository;
@@ -41,6 +42,13 @@ public class UserAuthorityService implements UserAuthorityServiceInterface{
     }
     public void delete(Long id){
         userAuthorityRepository.deleteByUserId(id);
+    }
+    public Boolean hasCustomerAuthority(UserData user, Authority authority) {
+        UserAuthorityData userAuthority = userAuthorityEntityToData(userAuthorityRepository.findByIdAndAuthority(user.getId(), authority.getCodeWithRole()));
+        if (userAuthority != null) {
+            return true;
+        }
+        return false;
     }
     private UserAuthority userAuthorityDataToEntity(UserAuthorityData userAuthorityData) {
         return new UserAuthority(userAuthorityData.getId(), equipmentUserDataToEntity(userAuthorityData.getUserData()), userAuthorityData.getAuthority());

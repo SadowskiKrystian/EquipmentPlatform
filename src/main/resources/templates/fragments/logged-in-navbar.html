@@ -1,0 +1,61 @@
+<nav class="navbar navbar-expand-xl navbar-light bg-light shadow" xmlns:th="http://www.thymeleaf.org">
+
+    <a class="navbar-brand d-flex align-items-center" href="/">
+        <img th:src="${@applicationConfig.getLogoFrontPath()}" width="50" height="50" class="d-inline-block align-top"
+             alt="Computing College Logo">
+        <span class="ml-2" th:text="${@applicationConfig.getAppNameFront()}"></span>
+    </a>
+
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+            aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto my-2 my-lg-0">
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown">
+                    <span><i class="fas fa-book"></i></span>
+                    <span th:text="#{equipment.front}"></span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" href="/create-equipment-front">
+                        <span><i class="fas fa-plus"></i></span>
+                        <span th:text="#{equipment.front.create}"></span>
+                    </a>
+                    <a class="dropdown-item" href="/equipments-front">
+                        <span><i class="fas fa-search"></i></span>
+                        <span th:text="#{equipment.front.find}"></span>
+                    </a>
+                </div>
+            </li>
+            <li th:if="${@userService.getLoggedUser()}"
+                class="nav-item"><a class="nav-link" href="/admin"><span><i class="fas fa-cog"></i></span><span
+                    th:text="#{navbar.admin}"></span></a></li>
+
+            <li id="notifications-dropdown" class="nav-item dropdown">
+                <a class="nav-link hidden-arrow" href="#" role="button" data-toggle="dropdown">
+                    <span><i class="fas fa-bell"></i></span>
+                    <span id="notifications-badge" class="badge rounded-pill badge-notification bg-danger"
+                          style="display: none;" notifications-active="true"><span
+                            id="notifications-counter"></span></span>
+                </a>
+                <div id="notifications-dropdown-body" class="dropdown-menu dropdown-menu-xl-right">
+                    <div class="text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+            <span class="border"></span>
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">
+                    <span><i class="fas fa-sign-out-alt"></i></span>
+                    <span th:text="#{navbar.logout}"></span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.getLanguage()}" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta name="description" th:content="#{login.content.description}">
+    <meta name="keywords" th:content="#{login.content.keywords}">
+    <title th:text="#{login.tab.title} + ' · ' + ${@applicationConfig.getAppNameFront()}"></title>
+    <div th:replace="fragments/front-head"></div>
+</head>
+
+<body>
+
+<nav th:replace="${@userService.getLoggedUser()} ? 'fragments/logged-in-navbar' : 'fragments/logged-out-navbar'"></nav>
+
+    <div class="container">
+        <div class="text-center mt-5 mb-3">
+            <h1 th:text="#{login.header}"></h1>
+        </div>
+
+        <div class="row my-5">
+            <div class="col-lg-3"></div>
+            <div id="login-window" class="col-lg-6">
+                <form name="login" th:action="@{/login}" method="post">
+
+                    <div th:if="${param.error}" class="alert alert-danger" th:text="#{login.incorrect.data}"></div>
+
+                    <div th:if="${param.logout}" class="alert alert-success alert-dismissible" th:text="#{login.logged.out}"></div>
+
+                    <input type="text" id="username" name="username" th:placeholder="#{login.email}" class="form-control" />
+                    <br>
+                    <input type="password" id="password" name="password" th:placeholder="#{login.password}" class="form-control" />
+                    <small class="form-text text-muted"><a href="/forget-password" th:text="#{login.forget.password}"></a></small>
+
+                    <div class="form-actions text-center">
+                        <button type="submit" class="btn btn-primary mt-4" th:text="#{login.log.in}"></button>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <div><a href="/register" th:text="#{login.do.not.have.account}"></a></div>
+                        <div><a href="/" th:text="#{login.go.to.home}"></a></div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-lg-3"></div>
+        </div>
+    </div>
+    <footer th:replace="fragments/footer"></footer>
+</body>
+
+</html>

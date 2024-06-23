@@ -15,4 +15,6 @@ public interface UserAuthorityRepository extends JpaRepository<UserAuthority, In
     @Modifying
     @Query("delete UserAuthority u where u.user.id = :id")
     public void deleteByUserId(Long id);
+    @Query("FROM UserAuthority u where u.user.id = :id and u.authority = :authority")
+    public UserAuthority findByIdAndAuthority(Long id, String authority);
 }
