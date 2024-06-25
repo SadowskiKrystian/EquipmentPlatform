@@ -2,16 +2,19 @@ package com.ksprogramming.equipment.endpoint;
 
 import com.ksprogramming.equipment.api.*;
 import com.ksprogramming.equipment.data.*;
+import com.ksprogramming.equipment.entities.Authority;
 import com.ksprogramming.equipment.service.AssignedAttributeServiceInterface;
 import com.ksprogramming.equipment.service.AttributeServiceInterface;
 import com.ksprogramming.equipment.service.EquipmentServiceInterface;
 import com.ksprogramming.equipment.service.UserServiceInterface;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -28,6 +31,14 @@ public class EquipmentEndPoint {
         this.equipmentService = equipmentService;
         this.attributeService = attributeService;
         this.assignedAttributeService = assignedAttributeService;
+    }
+    @PostMapping("/register-user")
+    public void register(@RequestBody UserPostRequest request, HttpServletRequest httpServletRequest) {
+        List<UserAuthorityData> authorities = new ArrayList<>();
+        authorities.add(new UserAuthorityData(Authority.USER.getCode()));
+        UserData userCreateRequest = new UserData(request.getLogin(), request.getPasswordHash(), false, request.getLanguage(),
+                authorities, LocalDateTime.now());
+        userService.registerUser(userCreateRequest);
     }
 
     @GetMapping("equipment/{id}")

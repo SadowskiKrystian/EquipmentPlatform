@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title th:text="${@applicationConfig.getAppNameFront()}"></title>
+    <div th:replace="fragments/front-head"></div>
+    <meta th:if="${#arrays.contains(@environment.getActiveProfiles(),'prod')}" name="robots" content="noindex">
+</head>
+
+    <body>
+
+    <nav th:replace="${@userService.getLoggedUser()} ? 'fragments/logged-in-navbar' : 'fragments/logged-out-navbar'"></nav>
+
+        <div class="container">
+            <div class="text-center mt-5 mb-3">
+                <h3 th:text="#{registered.success.header}"></h3>
+            </div>
+                <div class="text-center mt-3 mb-5">
+                    <h5 th:text="#{registered.success.content}"></h5>
+                    <div><a href="/login" th:text="#{registered.success.log.in}"></a></div>
+                    <div><a href="/" th:text="#{registered.success.go.home}"></a></div>
+                </div>
+
+            </form>
+        </div>
+
+    <footer th:replace="fragments/footer"></footer>
+
+    </body>
+
+</html>

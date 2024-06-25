@@ -31,7 +31,7 @@ public class UserServiceTest {
     @Test
     public void createUserTest(){
         LocalDateTime localDateTime = LocalDateTime.now();
-        UserData userData = userService.registerUser(new UserData("Marcin", "qwerty", false, Language.POLISH.getCode(), new ArrayList<>(), localDateTime));
+        UserData userData = userService.registerUser(new UserData("Marcin", "qwerty", false, Language.PL.getCode(), new ArrayList<>(), localDateTime));
         UserData getUser = userService.getUserById(userData.getId());
         assertEquals("Marcin", getUser.getLogin());
         assertEquals("qwerty", getUser.getPasswordHash());

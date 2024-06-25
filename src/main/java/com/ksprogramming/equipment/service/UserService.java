@@ -27,7 +27,6 @@ public class UserService implements UserServiceInterface{
     }
 
     public UserData registerUser(UserData userData){
-        //todo finish registration new user
         UserData user = equipmentUserEntityToData(userRepository.save(new User(
                 userData.getLogin(),
                 userData.getPasswordHash(),
