@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <div th:replace="fragments/head"></div>
+    <script th:inline="javascript">
+        var equipmentId = [[${equipmentId}]]
+    </script>
+    <script th:src="@{/js/equipment-admin.js}"></script>
+    <script th:src="@{/libs/sha.js}"></script>
+</head>
+
+<body>
+<div th:replace="fragments/menu :: menu"></div>
+
+<div class="container">
+    <div class="text-center">
+        <h4 th:text="#{equipment.admin.details}"></h4>
+        <h5>ID: <span th:text="${equipmentId}"></span></h5>
+    </div>
+    <form class="bg-light p-5 border">
+        <div id="equipment-row" class="form-group col-md-6 text-center">
+        </div>
+            <form class="bg-light p-5 border">
+                <div class="text-center">
+                    <div class="form-group col-md-6 text-center">
+                <h6 th:text="#{attribute.admin.attributes}"></h6>
+                        <div id="value-records">
+                        </div>
+                    </div>
+                </div>
+            </form>
+    </form>
+    <div class="text-center">
+        <button type="button" class="btn btn-danger mt-3" data-toggle="modal" data-target="#delete-object-modal"
+                onclick="sendDe" th:text="#{Delete}"></button>
+        <button type="button" id="save-changes-button" class="btn btn-warning mt-3" onclick="saveUpdate()"
+                th:text="#{Save.changes}"></button>
+        <button type="button" id="cancel-changes-button" class="btn btn-info mt-3" onclick="cancel()"
+                th:text="#{Cancel.changes}"></button>
+    </div>
+</div>
+<div th:replace="fragments/operation-successful-modal :: modal"></div>
+<div th:replace="fragments/delete-object-modal :: modal"></div>
+</body>
+
+</html>

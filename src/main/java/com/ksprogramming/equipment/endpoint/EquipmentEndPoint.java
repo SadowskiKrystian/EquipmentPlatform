@@ -2,6 +2,7 @@ package com.ksprogramming.equipment.endpoint;
 
 import com.ksprogramming.equipment.api.*;
 import com.ksprogramming.equipment.data.*;
+import com.ksprogramming.equipment.enumes.Authority;
 import com.ksprogramming.equipment.service.AssignedAttributeServiceInterface;
 import com.ksprogramming.equipment.service.AttributeServiceInterface;
 import com.ksprogramming.equipment.service.EquipmentServiceInterface;
@@ -29,6 +30,14 @@ public class EquipmentEndPoint {
         this.equipmentService = equipmentService;
         this.attributeService = attributeService;
         this.assignedAttributeService = assignedAttributeService;
+    }
+    @PostMapping("/register-user")
+    public void register(@RequestBody UserPostRequest request, HttpServletRequest httpServletRequest) {
+        List<UserAuthorityData> authorities = new ArrayList<>();
+        authorities.add(new UserAuthorityData(Authority.USER.getCode()));
+        UserData userCreateRequest = new UserData(request.getLogin(), request.getPasswordHash(), false, request.getLanguage(),
+                authorities, LocalDateTime.now());
+        userService.registerUser(userCreateRequest);
     }
 
     @GetMapping("equipment/{id}")

@@ -26,6 +26,12 @@ public class EquipmentData {
         this.createDate = createDate;
     }
 
+    public EquipmentData(Long id, UserData userData, String name, LocalDateTime createDate) {
+        this.id = id;
+        this.userData = userData;
+        this.name = name;
+        this.createDate = createDate;
+    }
 
     public Long getId() {
         return id;

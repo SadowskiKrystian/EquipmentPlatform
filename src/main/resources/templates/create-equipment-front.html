@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <div th:replace="fragments/equipment-front-head"></div>
+    <script th:src="@{/js/create-equipment-front.js}"></script>
+</head>
+
+<body>
+<nav th:replace="${@userService.getLoggedUser()} ? 'fragments/logged-in-navbar' : 'fragments/logged-out-navbar'"></nav>
+<h4 th:text="#{equipment.front.create}"></h4>
+
+<div class="container">
+    <form class="text-center card p-5 mt-5">
+        <div id="create-record" class="modal-body">
+        </div>
+        <div class="mt-5">
+            <button id="save-changes-button" type="button" class="btn btn btn-primary" onclick="saveAttributeValue()">Create</button>
+            <button id="cancel-changes-button" type="button" class="btn btn btn-danger" onclick="cancel()">Cancel</button>
+        </div>
+    </form>
+</div>
+
+<div th:replace="fragments/operation-successful-modal :: modal"></div>
+
+</body>
+
+</html>

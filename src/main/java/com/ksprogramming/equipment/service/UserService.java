@@ -2,6 +2,7 @@ package com.ksprogramming.equipment.service;
 
 import com.ksprogramming.equipment.data.UserAuthorityData;
 import com.ksprogramming.equipment.data.UserData;
+import com.ksprogramming.equipment.enumes.Authority;
 import com.ksprogramming.equipment.entities.User;
 import com.ksprogramming.equipment.entities.UserAuthority;
 import com.ksprogramming.equipment.repository.UserRepository;
@@ -26,22 +27,20 @@ public class UserService implements UserServiceInterface{
     }
 
     public UserData registerUser(UserData userData){
-        //todo finish registration new user
         UserData user = equipmentUserEntityToData(userRepository.save(new User(
                 userData.getLogin(),
                 userData.getPasswordHash(),
                 userData.getEmailConfirmed(),
                 userData.getLanguage(),
                 userData.getRegistrationDate())));
-        userData.getUserAuthoritiesData().stream()
-                .forEach(authority -> {
-                    userAuthorityService.save(new UserAuthorityData(user, authority.getAuthority()));
-                });
+                userAuthorityService.save(new UserAuthorityData(user, Authority.USER.getCodeWithRole()));
+
         return user;
     }
     public List<UserData> findAll(){
         return equipmentUsersEntityToData(userRepository.findDidntRemoveUser());
     }
+
     public UserData getLoggedUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         List<UserData> userData = equipmentUsersEntityToData(userRepository.findUserByLogin(authentication.getName()));
@@ -51,17 +50,31 @@ public class UserService implements UserServiceInterface{
             return null;
         }
     }
+
+    public UserData getUserByLogin(String login){
+        return userEntityToData(userRepository.findByLogin(login));
+
+    }
+    public Boolean isLoggedAdmin() {
+        return userAuthorityService.hasCustomerAuthority(getLoggedUser(), Authority.ADMIN);
+    }
+
+    private UserData userEntityToData(User login) {
+        return  new UserData(login.getId(), login.getLogin(), login.getPasswordHash(),
+                login.getEmailConfirmed(), login.getLanguage(), userAuthoritiesEntityToData(login.getUserAuthorities()), login.getRegistrationDate());
+
+
+    }
+
     public UserData getUserById(Long id){
-        UserData user = equipmentUserEntityToData(userRepository.getReferenceById(id.intValue()));
-        return user;
+        return equipmentUserEntityToData(userRepository.getReferenceById(id.intValue()));
+
     }
     public void changePasswordAdmin(Long id, String newPassword){
         UserData user = getUserById(id);
         changePassword(user, newPassword);
 
     }
-
-
 
     public void update(UserData userData){
         UserData user = equipmentUserEntityToData(userRepository.getReferenceById(userData.getId().intValue()));
@@ -86,6 +99,7 @@ public class UserService implements UserServiceInterface{
         userAuthorityService.delete(id);
 
     }
+
     private void changePassword(UserData user, String newPassword) {
         user.setPasswordHash(newPassword);
         userRepository.save(equipmentUserDataToEntity(user));

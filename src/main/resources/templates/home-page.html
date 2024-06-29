@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.getLanguage()}" xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta name="description" th:content="#{home.page.content.description}">
+        <meta name="keywords" th:content="#{home.page.content.keywords}">
+        <title th:text="#{home.page.tab.title} + ' · ' + ${@applicationConfig.getAppNameFront()}"></title>
+        <div th:replace="fragments/front-head"></div>
+        <script th:replace="fragments/languages-script"></script>
+    </head>
+
+    <body>
+       <nav th:replace="${@userService.getLoggedUser()} ? 'fragments/logged-in-navbar' : 'fragments/logged-out-navbar'"></nav>
+
+        <!-- Header -->
+        <header class="bg-primary py-5 mb-5">
+            <div class="container h-100">
+                <div class="row h-100 align-items-center">
+                    <div class="col-lg-12">
+                        <h1 class="display-4 text-white mt-5 mb-2">Equipment</h1>
+                        <p class="lead mb-5 text-white-50" th:text="#{home.page.subtitle}"></p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <div class="container">
+
+            <div class="row">
+                <div class="col-md-8 mb-5">
+                    <h2 th:text="#{home.page.who.we.are}"></h2>
+                    <hr>
+                    <p th:text="#{home.page.who.we.are.p.one}"></p>
+                    <p th:text="#{home.page.who.we.are.p.two}"></p>
+                </div>
+                <div class="col-md-4 mb-5">
+                    <h2 th:text="#{home.page.contact}"></h2>
+                    <hr>
+                    <address>
+                        <strong>Ksprogramming</strong>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                    </address>
+                    <!--<address>
+                        <abbr title="Email"><i class="far fa-envelope"></i></abbr> <span> </span>
+                        <a onclick="trace('link.clicked', 'contact-mail')" th:href="${@applicationConfig.getCompanyContactMailto()}" th:text="${@applicationConfig.getCompanyContactMail()}"></a>
+                    </address>-->
+                </div>
+            </div>
+            <!-- /.row -->
+
+            <div class="row">
+
+        </div>
+        <!-- /.container -->
+
+        <footer th:replace="fragments/footer"></footer>
+
+    </body>
+</html>

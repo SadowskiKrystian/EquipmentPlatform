@@ -1,0 +1,284 @@
+/*GENERAL*/
+
+html {
+    font-size: 12px;
+}
+
+body {
+    width: 90%;
+    margin: auto;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.mobile-only {
+    display: none;
+}
+
+.hide {
+    display: none;
+}
+
+.page-container {
+    width: 75px;
+}
+
+#ui-datepicker-div {
+    position: absolute !important;
+    z-index: 9999 !important;
+}
+
+
+/*HEADER*/
+
+header * {
+    font-family: Ubuntu;
+    font-size: 16px;
+}
+
+header {
+    display: block;
+    float: none;
+}
+
+header img {
+    float: left;
+    height: 50px;
+    margin-right: 20px;
+}
+
+header div:first-of-type {
+    float: left;
+    width: 250px;
+    padding-top: 20px; 
+    padding-bottom: 20px;
+}
+
+header div:last-of-type {
+    float: right; 
+}
+
+
+/*NAV*/
+
+nav * {
+    font-family: Ubuntu;
+}
+
+.navbar {
+    padding: 0;
+    margin-bottom: 32px;
+}
+
+.navbar > ul {
+    width: 100%;
+}
+
+.navbar ul {
+    background-color: #313131;
+}
+
+.navbar li {
+    background-color: #313131;
+}
+
+.navbar a, .navbar a:hover {
+    color: white;
+    font-size: 1rem;
+}
+
+.navbar a:hover {
+    background-color: #25b2e7;
+}
+
+.dropdown-menu {
+    margin: 0;
+    font-size: 0.75rem;
+}
+
+.nav-link.active {
+    background-color: #25b2e7;
+}
+
+@media screen and (max-width: 576px) {
+    .navbar > ul > li {
+        padding: 10px;
+        text-overflow: ellipsis;
+    }
+}
+
+
+/*SUBMENU*/
+
+.navbar-nav li:hover > ul.dropdown-menu {
+    display: block;
+}
+
+.dropdown-submenu {
+    position:relative;
+}
+
+.dropdown-submenu>.dropdown-menu {
+    top:0;
+    left:100%;
+    margin-top:-6px;
+}
+
+/* rotate caret on hover */
+.dropdown-menu > li > a:hover:after {
+    text-decoration: underline;
+    transform: rotate(-90deg);
+}
+
+
+/* TABLES */
+
+th, td {
+    vertical-align: middle;
+    text-align: center;
+}
+
+.left {
+    vertical-align: middle;
+    text-align: left;
+}
+
+.center {
+    text-align: center;
+}
+
+table {
+    border-color: 2px solid dark-grey;
+    background-color: light-grey;
+}
+
+.table-bordered td {
+    border: 2px solid #dee2e6;
+}
+
+.table-responsive {
+    overflow-x: hidden;
+}
+
+h6 {
+    font-weight: bold;
+    color: #666;
+    text-shadow: 1px 1px 0px #fff;
+}
+
+.table .thead-light th {
+    color: #666;
+    text-shadow: 1px 1px 0px #fff;
+}
+
+
+/*EMAIL CONTENT*/
+body {
+    background-color: white !important;
+}
+
+.email th, .email td {
+    text-align: initial;
+    border: none;
+}
+
+.table-hover .email tbody tr:hover {
+    background-color: initial;
+}
+
+
+/* MODALS */
+.ui-timepicker-container {
+    z-index: 1051 !important;
+}
+
+
+.modal-content.bg-red {
+   color: #721c24;
+   background-color: #f8d7da;
+   border-color: #d92638;
+   border-width: 3px;
+}
+
+.modal-content.bg-yellow {
+  color: #856404;
+  background-color: #fff3cd;
+  border-color: #ffbf00;
+  border-width: 3px;
+}
+
+.modal-content.bg-green {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #4bb464;
+  border-width: 3px;
+}
+
+.test-env {
+    color: #FF0000;
+    text-align: center;
+    font-family: Ubuntu;
+    font-size: 20px;
+}
+
+/*LOGIN PAGE - currently not used due to security restrictions
+
+#login-window {
+    position: fixed;
+    top: 20%;
+    left: 35%;
+    right: 35%;
+}
+
+[name="login"] {
+    background-color: #f5732a;
+    border-radius: 15px;
+    padding: 35px 50px;
+}
+
+[name="login"] input {
+    border-radius: 0px;
+    text-overflow: ellipsis;
+    width: 100%;
+    padding: 5px;
+    margin: 10px 0px;
+}
+
+[name="login"] button[type="submit"] {
+    color: white;
+    background-color: #f5732a;
+    border: solid 1px white;
+    border-radius: 0;
+    display: block;
+    margin: 30px auto 0px auto;
+    padding: 5px;
+}
+*/
+
+.save-receipt {
+    width: 15px;
+    height: 15px;
+    vertical-align: middle;
+    border: 0px solid red;
+    background-color: transparent;
+    background-image: url(/img/checkBlack.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    margin-left: 3px;
+    cursor: pointer;
+}
+
+.check-button-white {
+    width: 15px;
+    height: 15px;
+    vertical-align: middle;
+    border: 0px solid red;
+    background-color: transparent;
+    background-image: url(/img/checkWhite.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    margin-left: 3px;
+    cursor: pointer;
+}
+

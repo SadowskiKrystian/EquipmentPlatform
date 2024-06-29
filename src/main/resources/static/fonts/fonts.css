@@ -1,0 +1,36 @@
+@charset "utf-8";
+
+/* Light font */
+
+@font-face {
+  font-family: "Ubuntu";
+  font-style: normal;
+  font-weight: 300;
+  src: url("font/ubuntul.eot");
+  src: local("X"),
+  url("ubuntul.woff") format("woff"),
+  url("ubuntul.otf") format("opentype"),
+  url("ubuntul.svg") format("svg");
+}
+
+@font-face {
+  font-family: "Ubuntu";
+  font-style: normal;
+  font-weight: 400;
+  src: url("font/ubuntu.eot");
+  src: local("X"),
+  url("ubuntu.woff") format("woff"),
+  url("ubuntu.otf") format("opentype"),
+  url("ubuntu.svg") format("svg");
+}
+  
+@font-face {
+  font-family: "Ubuntu";
+  font-style: normal;
+  font-weight: 700;
+  src: url("font/ubuntub.eot");
+  src: local("X"),
+  url("ubuntub.woff") format("woff"),
+  url("ubuntub.otf") format("opentype"),
+  url("ubuntub.svg") format("svg");
+}

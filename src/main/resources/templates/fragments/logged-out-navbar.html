@@ -1,0 +1,74 @@
+<nav class="navbar navbar-expand-xl navbar-light bg-light shadow" xmlns:th="http://www.thymeleaf.org">
+
+    <a class="navbar-brand d-flex align-items-center" href="/">
+        <img th:src="${@applicationConfig.getLogoFrontPath()}" width="50" height="50" class="d-inline-block align-top" alt="Computing College Logo">
+        <span class="ml-2" th:text="${@applicationConfig.getAppNameFront()}"></span>
+    </a>
+
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto my-2 my-lg-0">
+            <!--
+            <li th:if="${!@applicationConfig.getMenuCoursesDisabled()}" class="nav-item">
+                <a class="nav-link" href="/courses">
+                    <span><i class="fas fa-video"></i></span>
+                    <span th:text="#{navbar.courses}"></span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/buy-our-code">
+                    <span><i class="fas fa-code"></i></span>
+                    <span th:text="#{navbar.buy.our.code}"></span>
+                </a>
+            </li>-->
+
+            <!--
+            <span class="border"></span>
+            <li class="nav-item">
+                <a class="nav-link" href="/basket">
+                    <span><i class="fas fa-shopping-cart"></i></span>
+                    <span th:text="#{navbar.basket}"></span>
+                    <span id="products-in-basket-counter" style="display: none;" class="badge badge-pill bg-danger"><span id="products-in-basket-quantity"></span></span>
+                </a>
+            </li>
+            -->
+            <span class="border"></span>
+            <li class="nav-item">
+                <b>
+                    <a class="nav-link" href="/login">
+<!--                        <span><i class="fas fa-sign-in-alt"></i></span>-->
+                        <span th:text="#{navbar.login}"></span>
+                    </a>
+                </b>
+            </li>
+            <!--
+            <li class="nav-item" th:if="${!@environment.getProperty('course-platform.menu.register.disabled')}">
+                <b>
+                    <a class="nav-link" href="/register">
+                        <span><i class="fas fa-user-plus"></i></span>
+                        <span th:text="#{navbar.register}"></span>
+                    </a>
+                </b>
+            </li>
+            -->
+            <span class="border"></span>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown">
+                    <span><i class="fas fa-globe"></i></span>
+                    <span th:text="#{navbar.language}"></span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" href="#" onclick="changeLanguage('pl')">
+                        <span><i class="flag-icon flag-icon-pl"></i></span>
+                        <span th:text="#{navbar.polish}"></span>
+                    </a>
+                    <a class="dropdown-item" href="#" onclick="changeLanguage('en')">
+                        <span><i class="flag-icon flag-icon-gb"></i></span>
+                        <span th:text="#{navbar.english}"></span>
+                    </a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>

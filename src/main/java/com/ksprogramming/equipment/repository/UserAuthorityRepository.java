@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserAuthorityRepository extends JpaRepository<UserAuthority, Integer> {
     @Query("from UserAuthority u where u.user.id = :id")
@@ -15,4 +16,6 @@ public interface UserAuthorityRepository extends JpaRepository<UserAuthority, In
     @Modifying
     @Query("delete UserAuthority u where u.user.id = :id")
     public void deleteByUserId(Long id);
+    @Query("FROM UserAuthority u where u.user.id = :id and u.authority = :authority")
+    public Optional<UserAuthority> findByIdAndAuthority(Long id, String authority);
 }

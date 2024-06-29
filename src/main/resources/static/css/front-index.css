@@ -1,0 +1,58 @@
+body {
+    background-color: #f2f2f2;
+}
+
+.product:hover{
+    box-shadow: 8px 8px 5px blue;
+    transform: scale(1.1);
+}
+
+.product-title:link, .product-title:visited, .product-title:hover, .product-title:active{
+    color: black;
+}
+
+.product-title:hover {
+    font-weight: bold;
+}
+
+.product-image:hover{
+    cursor: pointer;
+}
+
+.bg-computing-college-purple {
+    background-color: #9000ff;
+}
+
+.bg-computing-college-blue {
+    background-color: #0084ff;
+}
+
+.adviser-message {
+    border-radius: 25px;
+    border: 2px solid #73AD21;
+    padding: 10px;
+    width: 500px;
+    margin: 1px;
+    background-color: white;
+
+}
+
+.adviser-question {
+    border-radius: 25px;
+    border: 2px solid #007bff;
+    padding: 10px;
+    width: 500px;
+    margin: 1px;
+    background-color: white;
+
+}
+
+.adviser-advise {
+    border-radius: 25px;
+    border: 3px solid #008561;
+    padding: 10px;
+    width: 600px;
+    margin: 1px;
+    background-color: white;
+
+}

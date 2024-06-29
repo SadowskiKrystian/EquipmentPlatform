@@ -1,0 +1,70 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div th:fragment="menu">
+    <div>
+        <header class="clearfix">
+            <div>
+                <img th:src="${@applicationConfig.getLogoPanelPath()}" alt="logo">
+                <p class="desktop-only"><span th:text="#{main.menu.administration.panel}"></span> <strong th:text="${@applicationConfig.getAppNamePanel()}"> </strong></p>
+                <p class="mobile-only">Aplikacja mobilna<br></p>
+            </div>
+            <div class="topMenu">
+                <span class="desktop-only" th:text="#{main.menu.logged.in.user}"></span>
+                <span class="desktop-only"><b><span th:text="${@authenticatedUser.getUserName()}"></span></b></span>
+                <a class="btn btn-dark" href="/logout" th:text="#{main.menu.logout.button}"></a>
+                <div th:if="${@userService.isLoggedAdmin()}" class="dropdown ml-1 p-0" style="display: inline;">
+                    <button onclick="killApp()" class="btn btn-danger">Kill app</button>
+                </div>
+                <div class="dropdown ml-1 p-0" style="display: inline;">
+                    <a type="button" href="/" class="btn btn-info" th:text="#{main.menu.home}"></a>
+                </div>
+            </div>
+        </header>
+        <div class="test-env" th:if="${#arrays.contains(@environment.getActiveProfiles(),'test')}">
+            UWAGA! Środowisko testowe
+        </div>
+        <nav class="navbar navbar-expand-sm">
+            <!--/*check permissions for a given user in the database*/-->
+            <ul class="navbar-nav shadow" th:with="items=${@authenticatedUser.getMenu()}">
+
+                <!--/* a nav-item that is not a dropdown menu */-->
+                <li th:if="${#lists.isEmpty(item.children)}"
+                    th:each="item : ${items}" class="nav-item">
+                    <a class="nav-link" th:href="${item.url}"
+                       th:text="${item.name}"> </a>
+                    <!--/* a nav-item that is a dropdown menu */-->
+                <li th:if="${not #lists.isEmpty(item.children)}"
+                    th:each="item : ${items}" class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" th:href="${item.url}"
+                       th:text="${item.name}" data-toggle="dropdown"> </a>
+                    <ul th:with="subitems=${item.children}" class="dropdown-menu">
+                        <!--/* dropdown-item that is not a dropdown menu */-->
+                        <li th:if="${#lists.isEmpty(subitem.children)}" th:each="subitem : ${subitems}">
+                            <a class="dropdown-item" th:text="${subitem.name}"
+                               th:href="${subitem.url}"> </a>
+                        </li>
+                        <!--/* dropdown-item that is a dropdown menu */-->
+                        <li th:if="${not #lists.isEmpty(subitem.children)}" th:each="subitem : ${subitems}"
+                            class="dropdown-submenu">
+                            <a class="dropdown-item dropdown-toggle" th:text="${subitem.name}"
+                               th:href="${subitem.url}" data-toggle="dropdown"> </a>
+                            <!--/* sub-submenu */-->
+                            <ul th:with="subsubitems=${subitem.children}" class="dropdown-menu">
+                                <li th:each="subsubitem : ${subsubitems}">
+                                    <a class="dropdown-item" th:text="${subsubitem.name}"
+                                       th:href="${subsubitem.url}"> </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        <div th:replace="fragments/operation-failed-modal :: modal"></div>
+    </div>
+</div>
+
+</body>
+</html>
