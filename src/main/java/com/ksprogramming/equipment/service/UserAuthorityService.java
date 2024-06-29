@@ -2,7 +2,7 @@ package com.ksprogramming.equipment.service;
 
 import com.ksprogramming.equipment.data.UserAuthorityData;
 import com.ksprogramming.equipment.data.UserData;
-import com.ksprogramming.equipment.entities.Authority;
+import com.ksprogramming.equipment.enumes.Authority;
 import com.ksprogramming.equipment.entities.User;
 import com.ksprogramming.equipment.entities.UserAuthority;
 import com.ksprogramming.equipment.repository.UserAuthorityRepository;
@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -44,21 +45,22 @@ public class UserAuthorityService implements UserAuthorityServiceInterface{
         userAuthorityRepository.deleteByUserId(id);
     }
     public Boolean hasCustomerAuthority(UserData user, Authority authority) {
-        UserAuthorityData userAuthority = userAuthorityEntityToData(userAuthorityRepository.findByIdAndAuthority(user.getId(), authority.getCodeWithRole()));
-        if (userAuthority != null) {
+        Optional<UserAuthority> userAuthority = userAuthorityRepository.findByIdAndAuthority(user.getId(), authority.getCodeWithRole());
+        if(userAuthority.isPresent()){
             return true;
+        }else {
+            return false;
         }
-        return false;
     }
     private UserAuthority userAuthorityDataToEntity(UserAuthorityData userAuthorityData) {
-        return new UserAuthority(userAuthorityData.getId(), equipmentUserDataToEntity(userAuthorityData.getUserData()), userAuthorityData.getAuthority());
+        return new UserAuthority(userAuthorityData.getId(), userDataToEntity(userAuthorityData.getUserData()), userAuthorityData.getAuthority());
     }
     private UserAuthorityData userAuthorityEntityToData(UserAuthority userAuthorityEntity) {
-        return new UserAuthorityData(userAuthorityEntity.getId(), equipmentUserEntityToData(userAuthorityEntity.getUser()),
+        return new UserAuthorityData(userAuthorityEntity.getId(), userEntityToData(userAuthorityEntity.getUser()),
                 userAuthorityEntity.getAuthority());
     }
 
-    private User equipmentUserDataToEntity(UserData userData) {
+    private User userDataToEntity(UserData userData) {
         return new User(userData.getId(), userData.getLogin(), userData.getPasswordHash(),
                 userData.getEmailConfirmed(), userData.getLanguage(), userData.getRegistrationDate());
     }
@@ -67,13 +69,13 @@ public class UserAuthorityService implements UserAuthorityServiceInterface{
         List<UserAuthorityData> list = new ArrayList<>();
         userAuthorityEntities.stream()
                 .forEach(authority -> {
-                    list.add(new UserAuthorityData(authority.getId(), equipmentUserEntityToData(authority.getUser()),
+                    list.add(new UserAuthorityData(authority.getId(), userEntityToData(authority.getUser()),
                             authority.getAuthority()));
                 });
         return list;
     }
 
-    private UserData equipmentUserEntityToData(User user) {
+    private UserData userEntityToData(User user) {
         UserData userData = new UserData(user.getId(), user.getLogin(),
                 user.getPasswordHash(), user.getEmailConfirmed(), user.getLanguage(),
                 user.getRegistrationDate());

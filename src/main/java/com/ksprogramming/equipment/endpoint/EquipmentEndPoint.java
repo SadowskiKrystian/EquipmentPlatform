@@ -2,7 +2,7 @@ package com.ksprogramming.equipment.endpoint;
 
 import com.ksprogramming.equipment.api.*;
 import com.ksprogramming.equipment.data.*;
-import com.ksprogramming.equipment.entities.Authority;
+import com.ksprogramming.equipment.enumes.Authority;
 import com.ksprogramming.equipment.service.AssignedAttributeServiceInterface;
 import com.ksprogramming.equipment.service.AttributeServiceInterface;
 import com.ksprogramming.equipment.service.EquipmentServiceInterface;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController

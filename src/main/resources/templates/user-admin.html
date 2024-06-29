@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <div th:replace="fragments/head"></div>
+    <script th:inline="javascript">
+        var user = [[${user}]];
+        var authorityDict = [[${authoritiesDict}]];
+    </script>
+    <script th:src="@{/js/user-admin.js}"></script>
+    <script th:src="@{/libs/sha.js}"></script>
+
+</head>
+
+<body>
+<div th:replace="fragments/menu :: menu"></div>
+
+<div class="container">
+    <div class="text-center">
+        <h4 th:text="#{user.admin.details}"></h4>
+        <h5>ID: <span th:text="${user.getId()}"></span></h5>
+    </div>
+
+    <form class="bg-light p-5 border">
+        <div class="form-row">
+            <div class="form-group col-md-6 text-center">
+                <label for="login" th:text="#{users.admin.login}"></label>
+                <input type="text" class="form-control" id="login" th:value="${user.getLogin()}">
+            </div>
+            <div class="form-group col-md-6 text-center">
+            </div>
+            <div class="form-group col-md-6 text-center">
+                <label for="language" th:text="#{Language}"></label>
+                <select id="language" class="form-control">
+                    <option th:each="language : ${languagesDict}"
+                            th:value="${language.code}"
+                            th:text="${language.value}" th:selected="(${language.code} == *{user.getLanguage()})">
+                    </option>
+                </select>
+            </div>
+            <div class="form-group col-md-6 text-center">
+            </div>
+            <div class="form-group col-md-6 text-center">
+                <label for="email-confirmed" th:text="#{customer.admin.email.confirmed}"></label>
+                <select id="email-confirmed" class="form-control">
+                    <option th:each="email : ${yesNoDict}"
+                            th:value="${email.code}"
+                            th:text="${email.value}"
+                            th:selected="(${#bools.isTrue(email.code)} == *{user.emailConfirmed})">
+                    </option>
+                </select>
+            </div>
+        </div>
+        <form class="text-center">
+            <h6 th:text="#{customer.admin.choose.role}"></h6>
+            <!--            <th:block th:each="authority: ${authoritiesDict}">-->
+            <th:block th:each="authority: ${authoritiesDict}">
+                <input type="checkbox" th:id="${authority.code}" name="authorities" th:value="${authority.code}">
+                <label class="form-check-label" th:text="${authority.value}"></label>
+            </th:block>
+        </form>
+        <div class="text-center">
+            <button type="button" class="btn btn-secondary text-center mt-3" data-toggle="modal"
+                    data-target="#change-password-modal" th:text="#{my.account.change.password}"></button>
+            <button type="button" class="btn btn-danger mt-3" data-toggle="modal" data-target="#delete-object-modal"
+                    onclick="sendDeleteCustomer()" th:text="#{Delete}"></button>
+            <button type="button" id="save-changes-button" class="btn btn-warning mt-3" onclick="sendUpdateRequest()"
+                    th:text="#{Save.changes}"></button>
+            <button type="button" id="save-changes-button" class="btn btn-info mt-3" onclick="getUsersSite()"
+                    th:text="#{Back}"></button>
+        </div>
+
+    </form>
+</div>
+
+<div class="modal fade" id="change-password-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel" th:text="#{my.account.change.password}"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="text-center">
+                    <div class="form-group">
+                        <label for="new-password" th:text="#{my.account.enter.new.password}"></label>
+                        <input id="new-password" type="password" class="form-control" placeholder="********">
+                        <small class="form-text text-muted" th:text="#{password.requirements}"></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="repeated-new-password" th:text="#{my.account.repeat.new.password}"></label>
+                        <input id="repeated-new-password" type="password" class="form-control" placeholder="********">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="change-password-button" type="button" class="btn btn-outline-primary"
+                        onclick="performPasswordChange()" th:text="#{my.account.change.password.button}"></button>
+                <h4 id="password-change-error-alert-text" class="alert-heading"></h4>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/operation-successful-modal :: modal"></div>
+<div th:replace="fragments/delete-object-modal :: modal"></div>
+</body>
+
+</html>

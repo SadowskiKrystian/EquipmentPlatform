@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <div th:replace="fragments/head"></div>
+    <script th:inline="javascript">
+    </script>
+    <script th:src="@{/js/equipments-admin.js}"></script>
+    <script th:src="@{/libs/sha.js}"></script>
+    <script th:inline="javascript">
+    </script>
+</head>
+
+<body>
+<div th:replace="fragments/menu :: menu"></div>
+
+<h5 th:text="#{equipment.admin.header}"></h5>
+
+<button type="button" class="btn btn-success btn-lg btn-block" data-toggle="modal" data-target="#create-modal" th:text="#{Create}"></button>
+
+<div id="result-container" class="my-4">
+    <div class="table-responsive mb-0 pb-0">
+        <table class="table bg-light table-bordered table-hover table-sm mb-0 pb-0">
+            <thead class="thead-light">
+            <tr>
+                <th class="align-middle" th:text="#{equipment.admin.id}"></th>
+                <th class="align-middle" th:text="#{equipment.admin.user.login}"></th>
+                <th class="align-middle" th:text="#{equipment.admin.name}"></th>
+                <th class="align-middle" th:text="#{equipment.admin.create.date}"></th>
+                <th class="align-middle" th:text="#{equipment.admin.edit.date}"></th>
+                <th class="align-middle" th:text="#{equipments.admin.details}"></th>
+                <th class="align-middle" th:text="#{Delete}"></th>
+            </tr>
+            </thead>
+            <tbody id="records">
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="create-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel" th:text="#{equipment.admin.create.header}"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="create-record" class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="create-button" class="btn btn-success" onclick="saveAttributeValue()" th:text="#{Create}"></button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="cancel()" th:text="#{Cancel}"></button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/pagination :: pagination"></div>
+<div th:replace="fragments/operation-successful-modal :: modal"></div>
+<div th:replace="fragments/delete-object-modal :: modal"></div>
+</body>
+
+</html>

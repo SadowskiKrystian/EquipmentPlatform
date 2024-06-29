@@ -1,4 +1,4 @@
-package com.ksprogramming.equipment.service;
+package com.ksprogramming.equipment.api;
 
 import com.ksprogramming.equipment.enumes.Language;
 import org.springframework.context.i18n.LocaleContextHolder;

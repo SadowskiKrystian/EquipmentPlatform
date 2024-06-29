@@ -6,6 +6,6 @@ public enum DictionaryType {
     YES_NO,
     LANGUAGES,
     EMAIL_TITLES,
-    CUSTOMER_AUTHORITIES,
+    USER_AUTHORITIES,
     ATTRIBUTE_TYPES
 }

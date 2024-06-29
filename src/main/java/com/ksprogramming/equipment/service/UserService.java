@@ -2,7 +2,7 @@ package com.ksprogramming.equipment.service;
 
 import com.ksprogramming.equipment.data.UserAuthorityData;
 import com.ksprogramming.equipment.data.UserData;
-import com.ksprogramming.equipment.entities.Authority;
+import com.ksprogramming.equipment.enumes.Authority;
 import com.ksprogramming.equipment.entities.User;
 import com.ksprogramming.equipment.entities.UserAuthority;
 import com.ksprogramming.equipment.repository.UserRepository;
@@ -33,10 +33,8 @@ public class UserService implements UserServiceInterface{
                 userData.getEmailConfirmed(),
                 userData.getLanguage(),
                 userData.getRegistrationDate())));
-        userData.getUserAuthoritiesData().stream()
-                .forEach(authority -> {
-                    userAuthorityService.save(new UserAuthorityData(user, authority.getAuthority()));
-                });
+                userAuthorityService.save(new UserAuthorityData(user, Authority.USER.getCodeWithRole()));
+
         return user;
     }
     public List<UserData> findAll(){
@@ -57,7 +55,7 @@ public class UserService implements UserServiceInterface{
         return userEntityToData(userRepository.findByLogin(login));
 
     }
-    public Boolean isLoggedCustomerAdmin() {
+    public Boolean isLoggedAdmin() {
         return userAuthorityService.hasCustomerAuthority(getLoggedUser(), Authority.ADMIN);
     }
 

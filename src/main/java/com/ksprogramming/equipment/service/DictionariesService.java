@@ -1,5 +1,7 @@
 package com.ksprogramming.equipment.service;
 
+import com.ksprogramming.equipment.api.CacheType;
+import com.ksprogramming.equipment.api.LanguagesUtil;
 import com.ksprogramming.equipment.data.DictionaryData;
 import com.ksprogramming.equipment.enumes.*;
 import org.slf4j.Logger;
@@ -28,7 +30,7 @@ public class DictionariesService {
     public List<DictionaryData> getDictionary(DictionaryType type, Language lang) {
          if (YES_NO == type) {
             return getYesNo(lang);
-        } else if (CUSTOMER_AUTHORITIES == type) {
+        } else if (USER_AUTHORITIES == type) {
             return getUserAuthorities(lang);
         } else if (LANGUAGES == type) {
             return getLanguages(lang);
@@ -78,12 +80,12 @@ public class DictionariesService {
         List<DictionaryData> list = new ArrayList<>();
 
         if (Language.US == lang || Language.EN == lang) {
-            list.add(new DictionaryData(AuthorityUser.ADMIN.getCode(), "Admin", lang.getCode()));
-            list.add(new DictionaryData(AuthorityUser.USER.getCode(), "User", lang.getCode()));
+            list.add(new DictionaryData(Authority.ADMIN.getCode(), "Admin", lang.getCode()));
+            list.add(new DictionaryData(Authority.USER.getCode(), "User", lang.getCode()));
 
         } else if (Language.PL == lang) {
-            list.add(new DictionaryData(AuthorityUser.ADMIN.getCode(), "Admin", lang.getCode()));
-            list.add(new DictionaryData(AuthorityUser.USER.getCode(), "Użytkownik", lang.getCode()));
+            list.add(new DictionaryData(Authority.ADMIN.getCode(), "Admin", lang.getCode()));
+            list.add(new DictionaryData(Authority.USER.getCode(), "Użytkownik", lang.getCode()));
         }
 
         return list;

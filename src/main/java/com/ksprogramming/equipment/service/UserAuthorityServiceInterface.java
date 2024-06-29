@@ -2,7 +2,7 @@ package com.ksprogramming.equipment.service;
 
 import com.ksprogramming.equipment.data.UserAuthorityData;
 import com.ksprogramming.equipment.data.UserData;
-import com.ksprogramming.equipment.entities.Authority;
+import com.ksprogramming.equipment.enumes.Authority;
 
 import java.util.List;
 

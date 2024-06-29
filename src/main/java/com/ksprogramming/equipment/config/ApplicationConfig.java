@@ -17,13 +17,16 @@ import java.nio.charset.StandardCharsets;
 @EnableScheduling
 public class ApplicationConfig {
 
-
+    @Value("${app.name.panel}")
+    private String appNamePanel;
     @Value("${favicon.path}")
     private String faviconPath;
     @Value("${app.name.front}")
     private String appNameFront;
     @Value("${logo.front.path}")
     private String logoFrontPath;
+    @Value("${logo.panel.path}")
+    private String logoPanelPath;
 
     public String getFaviconPath() {
         return faviconPath;
@@ -47,6 +50,22 @@ public class ApplicationConfig {
 
     public void setLogoFrontPath(String logoFrontPath) {
         this.logoFrontPath = logoFrontPath;
+    }
+
+    public String getLogoPanelPath() {
+        return logoPanelPath;
+    }
+
+    public void setLogoPanelPath(String logoPanelPath) {
+        this.logoPanelPath = logoPanelPath;
+    }
+
+    public String getAppNamePanel() {
+        return appNamePanel;
+    }
+
+    public void setAppNamePanel(String appNamePanel) {
+        this.appNamePanel = appNamePanel;
     }
 
     @Bean

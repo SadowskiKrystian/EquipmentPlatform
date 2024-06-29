@@ -29,7 +29,6 @@ public class UserDetailsService implements org.springframework.security.core.use
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         userByLogin.getUserAuthoritiesData().stream()
                 .forEach(user-> grantedAuthorities.add(new SimpleGrantedAuthority(user.getAuthority())));
-        User u = new User(userByLogin.getLogin(), userByLogin.getPasswordHash(), grantedAuthorities);
         return new User(userByLogin.getLogin(), userByLogin.getPasswordHash(), grantedAuthorities);
     }
 }

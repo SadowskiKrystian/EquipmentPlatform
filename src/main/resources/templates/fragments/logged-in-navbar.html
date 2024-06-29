@@ -29,7 +29,7 @@
                     </a>
                 </div>
             </li>
-            <li th:if="${@userService.getLoggedUser()}"
+            <li th:if="${@userService.isLoggedAdmin()}"
                 class="nav-item"><a class="nav-link" href="/admin"><span><i class="fas fa-cog"></i></span><span
                     th:text="#{navbar.admin}"></span></a></li>
 

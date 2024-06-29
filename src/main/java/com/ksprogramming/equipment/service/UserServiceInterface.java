@@ -12,5 +12,4 @@ public interface UserServiceInterface {
     void changePasswordAdmin (Long id, String newPassword);
     void update(UserData equipmentUserData);
     void delete(Long id);
-
 }
