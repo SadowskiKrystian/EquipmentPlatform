@@ -7,7 +7,7 @@ import com.ksprogramming.equipment.service.AssignedAttributeServiceInterface;
 import com.ksprogramming.equipment.service.AttributeServiceInterface;
 import com.ksprogramming.equipment.service.EquipmentServiceInterface;
 import com.ksprogramming.equipment.service.UserServiceInterface;
-import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -41,11 +41,16 @@ public class EquipmentEndPoint {
     }
 
     @GetMapping("equipment/{id}")
-    public EquipmentWithAttributesGetResponse getEquipment(@PathVariable Long id){
-        EquipmentsWithDetailsData equipment = equipmentService.get(id);
-        return prepareEquipmentWithAttributesGetResponse(
-                equipment.getEquipment(), equipment.getAttributes(), attributeService.findAttributesByDomain());
+    public ResponseEntity<EquipmentWithAttributesGetResponse> getEquipment(@PathVariable Long id) {
+        EquipmentsWithDetailsData equipmentWithDetails = equipmentService.get(id);
+        if (equipmentWithDetails == null){
+            return ResponseEntity.notFound().build();
+        }else {
+            return ResponseEntity.ok(prepareEquipmentWithAttributesGetResponse(
+                    equipmentWithDetails.getEquipment(), equipmentWithDetails.getAttributes(), attributeService.findAttributesByDomain()));
+        }
     }
+
     @DeleteMapping("/equipment/{id}")
     public void deleteEquipment(@PathVariable Long id) {
         equipmentService.remove(id);
@@ -62,12 +67,22 @@ public class EquipmentEndPoint {
         equipmentService.create(equipment, valuesPostRequestToData(equipmentPostRequest.getValues()));
     }
     @GetMapping("/equipments")
-    public List<EquipmentGetResponse> findAll() {
-        return equipmentsDataToEquipmentsGetResponse();
+    public ResponseEntity<List<EquipmentGetResponse>> findAll() {
+        List<EquipmentGetResponse> equipmentGetResponse = equipmentsDataToEquipmentsGetResponse();
+        if (equipmentGetResponse.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }else {
+            return ResponseEntity.ok(equipmentGetResponse);
+        }
     }
     @GetMapping("/equipments/attributes")
-    public List<AttributeGetResponse> findAllAttributes() {
-        return attributesDataToResponse(attributeService.findAttributesByDomain());
+    public ResponseEntity<List<AttributeGetResponse>> findAllAttributes() {
+        List<AttributeGetResponse> attributeGetResponse = attributesDataToResponse(attributeService.findAttributesByDomain());
+        if (attributeGetResponse.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }else {
+            return ResponseEntity.ok(attributeGetResponse);
+        }
     }
     private List<ValueData> valuesPostRequestToData(List<ValuePostRequest> values) {
         List<ValueData> list = new ArrayList<>();

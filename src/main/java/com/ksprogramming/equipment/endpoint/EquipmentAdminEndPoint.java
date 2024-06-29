@@ -7,10 +7,12 @@ import com.ksprogramming.equipment.enumes.AttributeType;
 import com.ksprogramming.equipment.enumes.DictionaryType;
 import com.ksprogramming.equipment.enumes.Language;
 import com.ksprogramming.equipment.service.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -35,8 +37,13 @@ public class EquipmentAdminEndPoint {
     }
 
     @GetMapping("/users")
-    public List<EquipmentUserGetResponse> findAllEquipmentUsers() {
-        return equipmentUsersDataToResponse(userService.findAll());
+    public ResponseEntity<List<EquipmentUserGetResponse>> findAllEquipmentUsers() {
+        List<EquipmentUserGetResponse> equipmentUsersDataToResponse = equipmentUsersDataToResponse(userService.findAll());
+        if (equipmentUsersDataToResponse.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }else {
+            return ResponseEntity.ok(equipmentUsersDataToResponse);
+        }
     }
 
     @PostMapping("/user")
@@ -62,20 +69,50 @@ public class EquipmentAdminEndPoint {
         userService.changePasswordAdmin(id, request.getNewPasswordHash());
     }
     @GetMapping("/authority/{id}")
-    public List<UserAuthorityGetResponse> findAuthorityById(@PathVariable Long id) {
-        return userAuthoritiesDataToGetResponse(userAuthorityService.findById(id));
+    public ResponseEntity<List<UserAuthorityGetResponse>> findAuthorityById(@PathVariable Long id) {
+        List<UserAuthorityGetResponse> userAuthorities = userAuthoritiesDataToGetResponse(userAuthorityService.findById(id));
+        if (userAuthorities.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }else {
+            return ResponseEntity.ok(userAuthorities);
+        }
     }
     @GetMapping("/attribute/{id}")
-    public AttributeWithDetailsGetResponse getAttribute(@PathVariable Long id) {
-        return new AttributeWithDetailsGetResponse(attributeDataToResponse(attributeService.getAttribute(id)), assignedAttributeDataToResponse(assignedAttributeService.getAttributeWithValues(id)));
+    public ResponseEntity<AttributeWithDetailsGetResponse> getAttribute(@PathVariable Long id) {
+        AttributeWithDetailsGetResponse attribute = new AttributeWithDetailsGetResponse(attributeDataToResponse(attributeService.getAttribute(id)),
+                assignedAttributeDataToResponse(assignedAttributeService.getAttributeWithValues(id)));
+        if (attribute == null){
+            return ResponseEntity.noContent().build();
+        }else {
+            return ResponseEntity.ok(attribute);
+        }
     }
     @GetMapping("/attributes")
-    public AttributesWithDetailsGetResponse findAttributes() {
-        return new AttributesWithDetailsGetResponse(attributesDataToResponse(attributeService.findAttributes()), AttributeType.values());
+    public ResponseEntity<List<AttributeGetResponse>> findAttributes() {
+        List<AttributeGetResponse> attributes = attributesDataToResponse(attributeService.findAttributes());
+        if (attributes.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }else {
+            return ResponseEntity.ok(attributes);
+        }
+    }
+    @GetMapping("/attribute-types")
+    public ResponseEntity<AttributeType[]> getAttributeTypes() {
+        AttributeType[] attributeTypes = AttributeType.values();
+        if (attributeTypes == null){
+            return ResponseEntity.noContent().build();
+        }else {
+            return ResponseEntity.ok(attributeTypes);
+        }
     }
     @GetMapping("/attribute/value/{id}")
-    public List<AssignedAttributeGetResponse> attributeWithValues(@PathVariable Long id) {
-        return assignedAttributeDataToResponse(attributeService.findAttributesWithValue(id));
+    public ResponseEntity<List<AssignedAttributeGetResponse>> attributeWithValues(@PathVariable Long id) {
+        List<AssignedAttributeGetResponse> assignedAttributes = assignedAttributeDataToResponse(attributeService.findAttributesWithValue(id));
+        if (assignedAttributes.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }else {
+            return ResponseEntity.ok(assignedAttributes);
+        }
     }
     @PutMapping("/attribute/{id}")
     public void updateAttribute(@PathVariable Long id, @RequestBody AttributeGetRequest attributeGetRequest) {
@@ -96,17 +133,33 @@ public class EquipmentAdminEndPoint {
         equipmentService.create(equipment, valuesPostRequestToData(equipmentPostRequest.getValues()));
     }
     @GetMapping("/equipments")
-    public List<EquipmentGetResponse> findAll() {
-        return equipmentsDataToEquipmentsGetResponse();
+    public ResponseEntity<List<EquipmentGetResponse>> findAll() {
+        List<EquipmentGetResponse> equipments = equipmentsDataToEquipmentsGetResponse();
+        if (equipments.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }else {
+            return ResponseEntity.ok(equipments);
+        }
     }
     @GetMapping("/equipments/attributes")
-    public List<AttributeGetResponse> findAllAttributes() {
-        return attributesDataToResponse(attributeService.findAttributesByDomain());
+    public ResponseEntity<List<AttributeGetResponse>>findAllAttributes() {
+        List<AttributeGetResponse> attributes = attributesDataToResponse(attributeService.findAttributesByDomain());
+        if (attributes.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }else {
+            return ResponseEntity.ok(attributes);
+        }
     }
     @GetMapping("/equipment/{id}")
-    public EquipmentWithAttributesGetResponse get(@PathVariable Long id) {
+    public ResponseEntity<EquipmentWithAttributesGetResponse> get(@PathVariable Long id) {
         EquipmentsWithDetailsData equipmentsWithDetails = equipmentService.get(id);
-        return prepareEquipmentWithAttributesGetResponse(equipmentsWithDetails.getEquipment(), equipmentsWithDetails.getAttributes(), attributeService.findAttributesByDomain());
+        EquipmentWithAttributesGetResponse equipmentWithAttributesGetResponse = prepareEquipmentWithAttributesGetResponse(
+                equipmentsWithDetails.getEquipment(), equipmentsWithDetails.getAttributes(), attributeService.findAttributesByDomain());
+        if (equipmentWithAttributesGetResponse == null){
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(equipmentWithAttributesGetResponse);
+        }
     }
     @DeleteMapping("/equipment/{id}")
     public void deleteEquipment(@PathVariable Long id) {
