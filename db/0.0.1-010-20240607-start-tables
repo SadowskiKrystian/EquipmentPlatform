@@ -46,8 +46,10 @@ create table user
     id            int auto_increment primary key,
     login         varchar(200) not null,
     password_hash varchar(200) not null,
+    email_confirmed boolean not null,
     language      varchar(20)  not null,
     registration_date datetime not null,
+    edit_date datetime,
     delete_date datetime
 )
     COLLATE='utf8mb4_polish_ci'

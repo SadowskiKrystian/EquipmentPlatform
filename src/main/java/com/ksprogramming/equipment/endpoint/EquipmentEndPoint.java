@@ -7,6 +7,7 @@ import com.ksprogramming.equipment.service.AssignedAttributeServiceInterface;
 import com.ksprogramming.equipment.service.AttributeServiceInterface;
 import com.ksprogramming.equipment.service.EquipmentServiceInterface;
 import com.ksprogramming.equipment.service.UserServiceInterface;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

@@ -133,22 +133,12 @@ public class EquipmentAdminEndPoint {
         equipmentService.create(equipment, valuesPostRequestToData(equipmentPostRequest.getValues()));
     }
     @GetMapping("/equipments")
-    public ResponseEntity<List<EquipmentGetResponse>> findAll() {
-        List<EquipmentGetResponse> equipments = equipmentsDataToEquipmentsGetResponse();
-        if (equipments.isEmpty()){
-            return ResponseEntity.noContent().build();
-        }else {
-            return ResponseEntity.ok(equipments);
-        }
+    public List<EquipmentGetResponse> findAll() {
+      return equipmentsDataToEquipmentsGetResponse();
     }
     @GetMapping("/equipments/attributes")
-    public ResponseEntity<List<AttributeGetResponse>>findAllAttributes() {
-        List<AttributeGetResponse> attributes = attributesDataToResponse(attributeService.findAttributesByDomain());
-        if (attributes.isEmpty()){
-            return ResponseEntity.noContent().build();
-        }else {
-            return ResponseEntity.ok(attributes);
-        }
+    public List<AttributeGetResponse> indAllAttributes() {
+        return attributesDataToResponse(attributeService.findAttributesByDomain());
     }
     @GetMapping("/equipment/{id}")
     public ResponseEntity<EquipmentWithAttributesGetResponse> get(@PathVariable Long id) {
