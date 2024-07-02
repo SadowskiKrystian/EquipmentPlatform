@@ -33,7 +33,7 @@ function findAttributeValues(id){
 }
 function fillResults(attributes) {
     $("#records").empty();
-    attributes.attributes.forEach(function (attribute) {
+    attributes.forEach(function (attribute) {
         fillRow(attribute);
     });
 }

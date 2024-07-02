@@ -45,7 +45,7 @@ function fillResults(response) {
     $("#records").empty();
     var equipments = response;
     equipments.forEach(function (equipment) {
-        //fillRow(equipment);
+        fillRow(equipment);
     });
 }
 
