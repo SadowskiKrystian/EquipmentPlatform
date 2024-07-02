@@ -42,14 +42,11 @@ public class EquipmentEndPoint {
     }
 
     @GetMapping("equipment/{id}")
-    public ResponseEntity<EquipmentWithAttributesGetResponse> getEquipment(@PathVariable Long id) {
+    public EquipmentWithAttributesGetResponse getEquipment(@PathVariable Long id) {
         EquipmentsWithDetailsData equipmentWithDetails = equipmentService.get(id);
-        if (equipmentWithDetails == null){
-            return ResponseEntity.notFound().build();
-        }else {
-            return ResponseEntity.ok(prepareEquipmentWithAttributesGetResponse(
-                    equipmentWithDetails.getEquipment(), equipmentWithDetails.getAttributes(), attributeService.findAttributesByDomain()));
-        }
+        return prepareEquipmentWithAttributesGetResponse(
+                    equipmentWithDetails.getEquipment(), equipmentWithDetails.getAttributes(), attributeService.findAttributesByDomain());
+
     }
 
     @DeleteMapping("/equipment/{id}")
@@ -68,22 +65,12 @@ public class EquipmentEndPoint {
         equipmentService.create(equipment, valuesPostRequestToData(equipmentPostRequest.getValues()));
     }
     @GetMapping("/equipments")
-    public ResponseEntity<List<EquipmentGetResponse>> findAll() {
-        List<EquipmentGetResponse> equipmentGetResponse = equipmentsDataToEquipmentsGetResponse();
-        if (equipmentGetResponse.isEmpty()){
-            return ResponseEntity.notFound().build();
-        }else {
-            return ResponseEntity.ok(equipmentGetResponse);
-        }
+    public List<EquipmentGetResponse> findAll() {
+        return equipmentsDataToEquipmentsGetResponse();
     }
     @GetMapping("/equipments/attributes")
-    public ResponseEntity<List<AttributeGetResponse>> findAllAttributes() {
-        List<AttributeGetResponse> attributeGetResponse = attributesDataToResponse(attributeService.findAttributesByDomain());
-        if (attributeGetResponse.isEmpty()){
-            return ResponseEntity.notFound().build();
-        }else {
-            return ResponseEntity.ok(attributeGetResponse);
-        }
+    public List<AttributeGetResponse> findAllAttributes() {
+        return attributesDataToResponse(attributeService.findAttributesByDomain());
     }
     private List<ValueData> valuesPostRequestToData(List<ValuePostRequest> values) {
         List<ValueData> list = new ArrayList<>();
