@@ -24,16 +24,18 @@ public class EquipmentAdminEndPoint {
     private UserServiceInterface userService;
     private UserAuthorityServiceInterface userAuthorityService;
     private DictionariesService dictionariesService;
+    private EmailServiceInterface emailService;
 
     public EquipmentAdminEndPoint(EquipmentServiceInterface equipmentService, AssignedAttributeService assignedAttributeService,
                                   AttributeServiceInterface attributeService, UserServiceInterface userService,
-                                  UserAuthorityServiceInterface userAuthorityService, DictionariesService dictionariesService) {
+                                  UserAuthorityServiceInterface userAuthorityService, DictionariesService dictionariesService, EmailServiceInterface emailService) {
         this.equipmentService = equipmentService;
         this.assignedAttributeService = assignedAttributeService;
         this.attributeService = attributeService;
         this.userService = userService;
         this.userAuthorityService = userAuthorityService;
         this.dictionariesService = dictionariesService;
+        this.emailService = emailService;
     }
 
     @GetMapping("/users")
