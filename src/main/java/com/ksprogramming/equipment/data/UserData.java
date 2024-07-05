@@ -13,6 +13,11 @@ public class UserData {
     private LocalDateTime registrationDate;
     private LocalDateTime deleteDate;
 
+    public UserData(Long id, String login) {
+        this.id = id;
+        this.login = login;
+    }
+
     public UserData(Long id, String login, LocalDateTime registrationDate) {
         this.id = id;
         this.login = login;

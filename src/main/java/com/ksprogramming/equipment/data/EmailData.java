@@ -11,6 +11,10 @@ public class EmailData {
         this.text = text;
     }
 
+    public EmailData(String to) {
+        this.to = to;
+    }
+
     public String getTo() {
         return to;
     }

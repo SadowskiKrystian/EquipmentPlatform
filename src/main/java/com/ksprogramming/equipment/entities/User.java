@@ -31,6 +31,11 @@ public class User {
     public User() {
     }
 
+    public User(Long id, String login) {
+        this.id = id;
+        this.login = login;
+    }
+
     public User(Long id, String login, String passwordHash, String language) {
         this.id = id;
         this.login = login;
