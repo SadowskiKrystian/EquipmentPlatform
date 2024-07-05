@@ -25,6 +25,9 @@ public class UserService implements UserServiceInterface{
         this.userRepository = userRepository;
         this.userAuthorityService = userAuthorityService;
     }
+    public UserData getUserByEmail(String email) {
+        return userEntityToData(userRepository.findByLogin(email));
+    }
 
     public UserData registerUser(UserData userData){
         UserData user = equipmentUserEntityToData(userRepository.save(new User(

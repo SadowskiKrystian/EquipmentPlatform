@@ -13,6 +13,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("from User e where e.deleteDate is null")
     public List<User> findDidntRemoveUser();
     @Query("from User u where u.login= :login and u.deleteDate is null ")
-    public User findByLogin(String login);
+    User findByLogin(String login);
 
 }

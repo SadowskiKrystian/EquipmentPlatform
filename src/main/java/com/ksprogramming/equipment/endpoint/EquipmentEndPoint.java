@@ -3,12 +3,9 @@ package com.ksprogramming.equipment.endpoint;
 import com.ksprogramming.equipment.api.*;
 import com.ksprogramming.equipment.data.*;
 import com.ksprogramming.equipment.enumes.Authority;
-import com.ksprogramming.equipment.service.AssignedAttributeServiceInterface;
-import com.ksprogramming.equipment.service.AttributeServiceInterface;
-import com.ksprogramming.equipment.service.EquipmentServiceInterface;
-import com.ksprogramming.equipment.service.UserServiceInterface;
+import com.ksprogramming.equipment.exception.ExpiredorUsedToken;
+import com.ksprogramming.equipment.service.*;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -24,21 +21,38 @@ public class EquipmentEndPoint {
     private EquipmentServiceInterface equipmentService;
     private AttributeServiceInterface attributeService;
     private AssignedAttributeServiceInterface assignedAttributeService;
+    private EmailServiceInterface emailService;
+    private TokenServiceInterface tokenService;
 
     public EquipmentEndPoint(UserServiceInterface userService, EquipmentServiceInterface equipmentService,
-                             AttributeServiceInterface attributeService, AssignedAttributeServiceInterface assignedAttributeService) {
+                             AttributeServiceInterface attributeService, AssignedAttributeServiceInterface assignedAttributeService, EmailServiceInterface emailService, TokenServiceInterface tokenService) {
         this.userService = userService;
         this.equipmentService = equipmentService;
         this.attributeService = attributeService;
         this.assignedAttributeService = assignedAttributeService;
+        this.emailService = emailService;
+        this.tokenService = tokenService;
     }
     @PostMapping("/register-user")
     public void register(@RequestBody UserPostRequest request, HttpServletRequest httpServletRequest) {
         List<UserAuthorityData> authorities = new ArrayList<>();
         authorities.add(new UserAuthorityData(Authority.USER.getCode()));
-        UserData userCreateRequest = new UserData(request.getLogin(), request.getPasswordHash(), false, request.getLanguage(),
+        UserData user = new UserData(request.getLogin(), request.getPasswordHash(), false, request.getLanguage(),
                 authorities, LocalDateTime.now());
-        userService.registerUser(userCreateRequest);
+        UserData createUser = userService.registerUser(user);
+        TokenData token = tokenService.createToken(createUser);
+        emailService.sendEmailVerificationMessage(new EmailData(user.getLogin()), token);
+    }
+    @PostMapping("/verify")
+    public void verifyAccount(@RequestBody TokenPostRequest token) {
+        TokenData findToken = tokenService.findToken(token.getSendToken());
+        UserData userByEmail = userService.getUserByEmail(findToken.getUserData().getLogin());
+        findToken.setUsed(true);
+        tokenService.updateToken(findToken);
+        userByEmail.setEmailConfirmed(true);
+        userService.update(userByEmail);
+
+
     }
 
     @GetMapping("equipment/{id}")

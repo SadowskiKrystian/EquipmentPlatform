@@ -25,10 +25,10 @@ public class EquipmentAdminEndPoint {
     private UserAuthorityServiceInterface userAuthorityService;
     private DictionariesService dictionariesService;
     private EmailServiceInterface emailService;
-
+    private TokenServiceInterface tokenService;
     public EquipmentAdminEndPoint(EquipmentServiceInterface equipmentService, AssignedAttributeService assignedAttributeService,
                                   AttributeServiceInterface attributeService, UserServiceInterface userService,
-                                  UserAuthorityServiceInterface userAuthorityService, DictionariesService dictionariesService, EmailServiceInterface emailService) {
+                                  UserAuthorityServiceInterface userAuthorityService, DictionariesService dictionariesService, EmailServiceInterface emailService, TokenServiceInterface tokenService) {
         this.equipmentService = equipmentService;
         this.assignedAttributeService = assignedAttributeService;
         this.attributeService = attributeService;
@@ -36,6 +36,7 @@ public class EquipmentAdminEndPoint {
         this.userAuthorityService = userAuthorityService;
         this.dictionariesService = dictionariesService;
         this.emailService = emailService;
+        this.tokenService = tokenService;
     }
 
     @GetMapping("/users")

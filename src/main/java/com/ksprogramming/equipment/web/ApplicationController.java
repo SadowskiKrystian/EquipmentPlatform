@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 
@@ -43,6 +44,13 @@ public class ApplicationController {
     public String register(Model model) {
         model.addAttribute("languagesDict", dictionariesService.getDictionary(DictionaryType.LANGUAGES));
         return "register";
+    }
+    @GetMapping("/verify")
+    public String verifyEmail(@RequestParam(value = "token", defaultValue = "empty") String token) {
+        if (token.equals("empty")) {
+            return "redirect:/login";
+        }
+        return "email-confirmation";
     }
 
     @GetMapping({"/registered-successfully"})
