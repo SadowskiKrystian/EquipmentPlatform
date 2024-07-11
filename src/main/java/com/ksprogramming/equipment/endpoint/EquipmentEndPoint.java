@@ -5,8 +5,6 @@ import com.ksprogramming.equipment.data.*;
 import com.ksprogramming.equipment.enumes.Authority;
 import com.ksprogramming.equipment.service.*;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -92,8 +90,8 @@ public class EquipmentEndPoint {
         equipmentService.create(equipment, valuesPostRequestToData(equipmentPostRequest.getValues()));
     }
     @GetMapping("/equipments")
-    public List<EquipmentGetResponse> findAll() {
-        return equipmentsDataToEquipmentsGetResponse();
+    public List<EquipmentGetResponse> findAll(@RequestParam(name = "name", required = false) String name) {
+        return equipmentsDataToEquipmentsGetResponse(name);
     }
     @GetMapping("/equipments/attributes")
     public List<AttributeGetResponse> findAllAttributes() {
@@ -125,15 +123,15 @@ public class EquipmentEndPoint {
         return new EquipmentWithAttributesGetResponse(new EquipmentGetResponse(equipmentData),
                 assignedAttributes, attributes);
     }
-    private List<EquipmentGetResponse> equipmentsDataToEquipmentsGetResponse() {
+    private List<EquipmentGetResponse> equipmentsDataToEquipmentsGetResponse(String name) {
         List<EquipmentGetResponse> equipments = new ArrayList<>();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        equipmentService.findByLogin(authentication.getName()).stream()
+        equipmentService.findByLogin(name).stream()
                 .forEach(equipment -> equipments.add(new EquipmentGetResponse(equipment.getId()
                         , equipmentUserDataToGetResponse(equipment.getUserData())
                         , equipment.getName()
                         , equipment.getCreateDate()
                         , equipment.getEditDate())));
+
         return equipments;
     }
     private List<AttributeGetResponse> attributesDataToResponse(List<AttributeData> attributesData) {

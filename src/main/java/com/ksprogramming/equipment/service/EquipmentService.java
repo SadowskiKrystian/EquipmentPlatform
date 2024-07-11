@@ -12,6 +12,8 @@ import com.ksprogramming.equipment.repository.AttributeRepository;
 import com.ksprogramming.equipment.repository.EquipmentRepository;
 import com.ksprogramming.equipment.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -74,9 +76,10 @@ public class EquipmentService implements EquipmentServiceInterface{
         equipmentRepository.findAll().stream().forEach(equipmentEntity -> equipments.add(equipmentEntityToData(equipmentEntity)));
         return equipments;
     }
-    public List<EquipmentData> findByLogin(String login){
+    public List<EquipmentData> findByLogin(String name){
         List<EquipmentData> equipments = new ArrayList<>();
-        equipmentRepository.findByLogin(login).stream()
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        equipmentRepository.findByLogin(authentication.getName(), name).stream()
                 .forEach(equipmentEntity -> equipments.add(equipmentEntityToData(equipmentEntity)));
         return equipments;
     }

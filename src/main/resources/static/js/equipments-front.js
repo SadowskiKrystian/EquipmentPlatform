@@ -14,7 +14,7 @@ $(document).ready(function () {
 
 function findEquipments() {
     $.ajax({
-        url: "/api/crs/equipments",
+        url: "/api/crs/equipments?" + prepareUrl(),
         type: "get",
         dataType: "json",
         contentType: "application/json"
@@ -25,6 +25,14 @@ function findEquipments() {
         .fail(function (jqxhr, textStatus, errorThrown) {
             displayErrorInformation(jqxhr.responseText);
         });
+}
+function prepareUrl() {
+    var url = "";
+    var name = $("#name").val();
+    if (name != "") {
+        url += "&name=" + name;
+    }
+    return url;
 }
 
 function findAttributes() {
@@ -52,7 +60,6 @@ function fillResults(response) {
 function fillRow(equipment) {
     $('#records').append(
         "<tr>" +
-        "<td class='align-middle'>" + equipment.id + "</td>" +
         "<td class='align-middle'>" + equipment.name + "</td>" +
         "<td class='align-middle'>" + equipment.createDate + "</td>" +
         "<td class='align-middle'>" + equipment.editDate + "</td>" +
