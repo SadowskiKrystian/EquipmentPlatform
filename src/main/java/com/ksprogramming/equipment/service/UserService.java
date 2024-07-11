@@ -30,7 +30,7 @@ public class UserService implements UserServiceInterface{
     }
 
     public UserData registerUser(UserData userData){
-        UserData user = equipmentUserEntityToData(userRepository.save(new User(
+        UserData user = userEntityToData(userRepository.save(new User(
                 userData.getLogin(),
                 userData.getPasswordHash(),
                 userData.getEmailConfirmed(),
@@ -41,12 +41,12 @@ public class UserService implements UserServiceInterface{
         return user;
     }
     public List<UserData> findAll(){
-        return equipmentUsersEntityToData(userRepository.findDidntRemoveUser());
+        return usersEntityToData(userRepository.findDidntRemoveUser());
     }
 
     public UserData getLoggedUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        List<UserData> userData = equipmentUsersEntityToData(userRepository.findUserByLogin(authentication.getName()));
+        List<UserData> userData = usersEntityToData(userRepository.findUserByLogin(authentication.getName()));
         if (!userData.isEmpty()){
             return userData.getFirst();
         }else {
@@ -62,15 +62,10 @@ public class UserService implements UserServiceInterface{
         return userAuthorityService.hasCustomerAuthority(getLoggedUser(), Authority.ADMIN);
     }
 
-    private UserData userEntityToData(User login) {
-        return  new UserData(login.getId(), login.getLogin(), login.getPasswordHash(),
-                login.getEmailConfirmed(), login.getLanguage(), userAuthoritiesEntityToData(login.getUserAuthorities()), login.getRegistrationDate());
 
-
-    }
 
     public UserData getUserById(Long id){
-        return equipmentUserEntityToData(userRepository.getReferenceById(id.intValue()));
+        return userEntityToData(userRepository.getReferenceById(id.intValue()));
 
     }
     public void changePasswordAdmin(Long id, String newPassword){
@@ -78,13 +73,16 @@ public class UserService implements UserServiceInterface{
         changePassword(user, newPassword);
 
     }
+    public void changeForgottenPassword(UserData user){
+        userRepository.save(userDataToEntity(user));
+    }
 
     public void update(UserData userData){
-        UserData user = equipmentUserEntityToData(userRepository.getReferenceById(userData.getId().intValue()));
+        UserData user = userEntityToData(userRepository.getReferenceById(userData.getId().intValue()));
         user.setLogin(userData.getLogin());
         user.setEmailConfirmed(userData.getEmailConfirmed());
         user.setLanguage(userData.getLanguage());
-        User originalUser = equipmentUserDataToEntity(user);
+        User originalUser = userDataToEntity(user);
         userRepository.save(originalUser);
         userAuthorityService.delete(userData.getId());
         if(userData.getUserAuthoritiesData() != null) {
@@ -96,31 +94,30 @@ public class UserService implements UserServiceInterface{
 
     }
     public void delete(Long id){
-        UserData user = equipmentUserEntityToData(userRepository.getReferenceById(id.intValue()));
+        UserData user = userEntityToData(userRepository.getReferenceById(id.intValue()));
         user.setDeleteDate(LocalDateTime.now());
-        userRepository.save(equipmentUserDataToEntity(user));
+        userRepository.save(userDataToEntity(user));
         userAuthorityService.delete(id);
 
     }
 
     private void changePassword(UserData user, String newPassword) {
         user.setPasswordHash(newPassword);
-        userRepository.save(equipmentUserDataToEntity(user));
+        userRepository.save(userDataToEntity(user));
     }
     private List<UserAuthorityData> userAuthoritiesEntityToData(List<UserAuthority> userAuthorities){
         List<UserAuthorityData> list = new ArrayList<>();
         userAuthorities.stream()
                 .forEach(authority -> {
-                    list.add(new UserAuthorityData(authority.getId(),
-                            equipmentUserEntityToData(authority.getUser()), authority.getAuthority()));
+                    list.add(new UserAuthorityData(authority.getAuthority()));
                 });
         return list;
     }
     private UserAuthorityData userAuthorityEntityToData(UserAuthority userAuthorityEntity){
-        return new UserAuthorityData(userAuthorityEntity.getId(), equipmentUserEntityToData(userAuthorityEntity.getUser()),
+        return new UserAuthorityData(userAuthorityEntity.getId(), userEntityToData(userAuthorityEntity.getUser()),
                 userAuthorityEntity.getAuthority());
     }
-    private User equipmentUserDataToEntity(UserData userData){
+    private User userDataToEntity(UserData userData){
         return new User(userData.getId(), userData.getLogin(),
                 userData.getPasswordHash(), userData.getEmailConfirmed(),
                 userData.getLanguage(),
@@ -129,14 +126,13 @@ public class UserService implements UserServiceInterface{
     }
 
 
-    private UserData equipmentUserEntityToData(User userEntity) {
-        UserData user = new UserData(userEntity.getId(), userEntity.getLogin(),
-                userEntity.getPasswordHash(), userEntity.getEmailConfirmed(), userEntity.getLanguage(),
-                userEntity.getRegistrationDate(),userEntity.getDeleteDate());
-        return user;
-    }
+    private UserData userEntityToData(User login) {
+        return  new UserData(login.getId(), login.getLogin(), login.getPasswordHash(),
+                login.getEmailConfirmed(), login.getLanguage(),userAuthoritiesEntityToData(login.getUserAuthorities()), login.getRegistrationDate());
 
-    private List<UserData> equipmentUsersEntityToData(List<User> users){
+
+    }
+    private List<UserData> usersEntityToData(List<User> users){
         List<UserData> list = new ArrayList<>();
         users.stream()
                 .forEach(user -> {

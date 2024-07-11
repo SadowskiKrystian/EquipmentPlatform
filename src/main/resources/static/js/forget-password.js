@@ -2,7 +2,7 @@
 function sendForgetPasswordRequest() {
    $("#send-request-button").attr("disabled", true);
    $.ajax({
-        url: "/api/crs/customer/forget-password/?email=" + $("#email").val(),
+        url: "/api/crs/user/forget-password/?email=" + $("#email").val(),
         method: "POST",
         contentType: "application/json",
     })

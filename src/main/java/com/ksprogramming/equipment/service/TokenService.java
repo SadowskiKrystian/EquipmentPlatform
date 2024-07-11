@@ -15,29 +15,23 @@ import java.util.UUID;
 @Service
 public class TokenService implements TokenServiceInterface{
     private TokenRepository tokenRepository;
+    private TokenStateServiceInterface tokenStateService;
 
-    public TokenService(TokenRepository tokenRepository) {
+    public TokenService(TokenRepository tokenRepository, TokenStateServiceInterface tokenStateService) {
         this.tokenRepository = tokenRepository;
+        this.tokenStateService = tokenStateService;
     }
-    
+
     public TokenData findToken(String token) {
-        Token tokenEntity = tokenRepository.findByToken(token);
-        if (tokenEntity != null) {
-            TokenData tokenData = tokenEntityToData(tokenEntity);
-            if (LocalDateTime.now().isAfter(tokenData.getExpirationDatetime()) || tokenData.getUsed() == true) {
-                throw new ExpiredorUsedToken("Token has expired or used");
-            }
-            return tokenEntityToData(tokenRepository.findByToken(token));
-        }else {
-            throw new TokenNotFound("Token not found");
-        }
+        TokenData tokenData = verifyTokenExistence(tokenRepository.findByToken(token));
+        verifyTokenValidity(tokenData);
+        return tokenEntityToData(tokenRepository.findByToken(token));
+
+
     }
     public TokenData updateToken(TokenData tokenData) {
          return tokenEntityToData(tokenRepository.save(tokenDataToEntity(tokenData)));
     }
-
-
-
     public TokenData createToken(UserData userData){
         return tokenEntityToData(tokenRepository.save(new Token(userDataToEntity(userData), UUID.randomUUID().toString(), LocalDateTime.now().plusHours(1L), false)));
     }
@@ -56,5 +50,18 @@ public class TokenService implements TokenServiceInterface{
     private UserData userEntityToData(User user) {
         return new UserData(user.getId(), user.getLogin());
     }
-
+    private void verifyTokenValidity(TokenData tokenData) {
+        if (tokenStateService.isTokenExpired(tokenData)) {
+            throw new ExpiredorUsedToken("Token has expired ");
+        } else if (tokenStateService.isTokenUsed(tokenData)) {
+            throw new ExpiredorUsedToken("Token has used ");
+        }
+    }
+    private TokenData verifyTokenExistence(Token token) {
+        if (token == null) {
+            throw new TokenNotFound("Token not found");
+        } else {
+            return tokenEntityToData(token);
+        }
+    }
 }

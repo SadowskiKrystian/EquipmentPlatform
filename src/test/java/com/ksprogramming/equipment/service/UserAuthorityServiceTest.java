@@ -27,9 +27,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestPropertySource("classpath:application-integrationtest.properties")
 class UserAuthorityServiceTest {
     private final String ROLE = "ADMIN";
-    private UserData userData;
-    private UserAuthorityData userAuthority;
     private LocalDateTime localDateTime = LocalDateTime.now();
+    private UserData userData = new UserData(1L,"Marian", "qwerty", false, "PL", new ArrayList<>(), localDateTime);
+    private UserAuthorityData userAuthority = new UserAuthorityData(userData, ROLE);
     @Autowired
     private UserAuthorityServiceInterface userAuthorityService;
     @Autowired
@@ -43,12 +43,11 @@ class UserAuthorityServiceTest {
     public void setUp() {
         userAuthorityRepository.deleteAll();
         userRepository.deleteAll();
-        userData = new UserData(1L,"Marian", "qwerty", false, "PL", new ArrayList<>(), localDateTime);
-        userAuthority = new UserAuthorityData(userData, ROLE);
     }
     @Test
     void registerUser() {
         // WHEN
+        userAuthorityRepository.deleteAll();
         UserData actualUser = equipmentUserService.registerUser(userData);
         UserAuthorityData saveUserAuthority = userAuthorityService.save(new UserAuthorityData(actualUser, ROLE));
         UserAuthorityData actualUserAuthority = userAuthorityService.get(saveUserAuthority.getId());

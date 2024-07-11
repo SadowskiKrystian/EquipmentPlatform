@@ -3,7 +3,6 @@ package com.ksprogramming.equipment.endpoint;
 import com.ksprogramming.equipment.api.*;
 import com.ksprogramming.equipment.data.*;
 import com.ksprogramming.equipment.enumes.Authority;
-import com.ksprogramming.equipment.exception.ExpiredorUsedToken;
 import com.ksprogramming.equipment.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
@@ -51,8 +50,22 @@ public class EquipmentEndPoint {
         tokenService.updateToken(findToken);
         userByEmail.setEmailConfirmed(true);
         userService.update(userByEmail);
+    }
+    @PostMapping("/user/forget-password/")
+    public void forgetPassword(@RequestParam String email) {
+            UserData user = userService.getUserByEmail(email);
+            TokenData token = tokenService.createToken(user);
+            emailService.sendResetPasswordEmail(new EmailData(user.getLogin()), token);
 
-
+    }
+    @PutMapping("/user/reset-password")
+    public void resetPassword(@RequestBody ResetForgottenPasswordPutRequest request){
+        TokenData token = tokenService.findToken(request.getToken());
+        UserData user = userService.getUserByEmail(token.getUserData().getLogin());
+        user.setPasswordHash(request.getPasswordHash());
+        userService.changeForgottenPassword(user);
+        token.setUsed(true);
+        tokenService.updateToken(token);
     }
 
     @GetMapping("equipment/{id}")

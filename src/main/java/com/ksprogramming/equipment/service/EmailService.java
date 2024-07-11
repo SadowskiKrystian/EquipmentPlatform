@@ -33,4 +33,16 @@ public class EmailService implements EmailServiceInterface{
         message.setText(text);
         emailRepository.sendEmail(message);
     }
+    public void sendResetPasswordEmail(EmailData email, TokenData token){
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email.getTo());
+        message.setSubject("Equipment-platform");
+        String text = "Reset Password \n";
+        text += "Dear " + email.getTo() + ",\n";
+        text += "Please click the link below to reset your password:\n";
+        text += "http://localhost:8081/reset-password?token=" + token.getValue() + "\n";
+        text += "Thank you,\nEquipment-platform";
+        message.setText(text);
+        emailRepository.sendEmail(message);
+    }
 }

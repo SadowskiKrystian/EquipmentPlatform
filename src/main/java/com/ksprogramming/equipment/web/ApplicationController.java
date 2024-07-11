@@ -39,6 +39,10 @@ public class ApplicationController {
     public String forgetPassword() {
         return "forget-password";
     }
+    @GetMapping({"/reset-password"})
+    public String resetPassword(@RequestParam(value = "token", defaultValue = "empty") String token){
+        return "front-reset-password";
+    }
 
     @GetMapping({"/register"})
     public String register(Model model) {
