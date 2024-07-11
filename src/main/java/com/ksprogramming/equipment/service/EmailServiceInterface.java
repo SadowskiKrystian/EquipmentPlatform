@@ -6,4 +6,5 @@ import com.ksprogramming.equipment.data.TokenData;
 public interface EmailServiceInterface {
     void sendEmailMessage(EmailData email);
     void sendEmailVerificationMessage(EmailData email, TokenData token);
+    void sendResetPasswordEmail(EmailData email, TokenData token);
 }

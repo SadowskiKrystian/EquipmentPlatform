@@ -13,4 +13,5 @@ public interface UserServiceInterface {
     void update(UserData equipmentUserData);
     void delete(Long id);
     UserData getUserByEmail(String email);
+    public void changeForgottenPassword(UserData user);
 }
