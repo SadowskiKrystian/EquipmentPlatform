@@ -10,7 +10,7 @@ public interface EquipmentRepository extends JpaRepository<Equipment, Integer> {
     @Override
     @Query("FROM Equipment WHERE removeDate is null")
     List<Equipment> findAll();
-    @Query("from Equipment e where e.user.login = :login and e.removeDate is null ")
-    List<Equipment> findByLogin(String login);
+    @Query("from Equipment e where e.user.login = :login and (:name is null or e.name like %:name%) and e.removeDate is null ")
+    List<Equipment> findByLogin(String login, String name);
 
 }

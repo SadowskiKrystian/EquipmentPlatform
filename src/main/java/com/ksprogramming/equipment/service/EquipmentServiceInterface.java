@@ -11,7 +11,7 @@ public interface EquipmentServiceInterface {
     void update(EquipmentData equipmentData, List<ValueData> values);
     EquipmentsWithDetailsData get(Long id);
     List<EquipmentData> findAll();
-    List<EquipmentData> findByLogin(String login);
+    List<EquipmentData> findByLogin(String name);
     void remove(Long id);
 
 }
