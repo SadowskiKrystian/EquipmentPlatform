@@ -21,6 +21,8 @@ public class User {
     private List<UserAuthority> userAuthorities;
     @OneToMany(mappedBy = "user")
     private List<Equipment> equipments;
+    @OneToMany(mappedBy = "receiverId")
+    private List<Notification> notification;
     @Column(name = "registration_date")
     private LocalDateTime registrationDate;
     @Column(name = "delete_date")
