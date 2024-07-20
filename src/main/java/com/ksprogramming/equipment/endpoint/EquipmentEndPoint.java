@@ -20,16 +20,31 @@ public class EquipmentEndPoint {
     private AssignedAttributeServiceInterface assignedAttributeService;
     private EmailServiceInterface emailService;
     private TokenServiceInterface tokenService;
+    private NotificationServiceInterface notificationService;
 
     public EquipmentEndPoint(UserServiceInterface userService, EquipmentServiceInterface equipmentService,
-                             AttributeServiceInterface attributeService, AssignedAttributeServiceInterface assignedAttributeService, EmailServiceInterface emailService, TokenServiceInterface tokenService) {
+                             AttributeServiceInterface attributeService, AssignedAttributeServiceInterface assignedAttributeService, EmailServiceInterface emailService, TokenServiceInterface tokenService, NotificationServiceInterface notificationService) {
         this.userService = userService;
         this.equipmentService = equipmentService;
         this.attributeService = attributeService;
         this.assignedAttributeService = assignedAttributeService;
         this.emailService = emailService;
         this.tokenService = tokenService;
+        this.notificationService = notificationService;
     }
+    @GetMapping("/notifications")
+    public List<NotificationGetResponse> findNotificationByReceiverId() {
+       return notificationsDataToResponse(notificationService.findNotificationsByReceiverId());
+    }
+    @PutMapping("/notification/{id}")
+    public void updateNotification(@PathVariable("id") Long id) {
+        notificationService.updateSeenNotification(id);
+    }
+    @GetMapping("notifications/count/unseen")
+    public Long countUnseenNotifications() {
+        return notificationService.countUnseenNotifications();
+    }
+
     @PostMapping("/register-user")
     public void register(@RequestBody UserPostRequest request, HttpServletRequest httpServletRequest) {
         List<UserAuthorityData> authorities = new ArrayList<>();
@@ -96,6 +111,12 @@ public class EquipmentEndPoint {
     @GetMapping("/equipments/attributes")
     public List<AttributeGetResponse> findAllAttributes() {
         return attributesDataToResponse(attributeService.findAttributesByDomain());
+    }
+    private List<NotificationGetResponse> notificationsDataToResponse(List<NotificationData> notificationsByReceiverId) {
+        List<NotificationGetResponse> notifications = new ArrayList<>();
+        notificationsByReceiverId.forEach(notification -> notifications.add(new NotificationGetResponse(notification.getId(), notification.getSenderLogin(), notification.getReceiverId(),
+                notification.getTitle(), notification.getContent(), notification.getCreateDateTime(), notification.getSeenDateTime())));
+        return notifications;
     }
     private List<ValueData> valuesPostRequestToData(List<ValuePostRequest> values) {
         List<ValueData> list = new ArrayList<>();

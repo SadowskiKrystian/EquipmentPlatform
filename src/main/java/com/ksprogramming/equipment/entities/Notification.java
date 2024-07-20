@@ -10,11 +10,15 @@ public class Notification {
     private Long id;
     private String senderLogin;
     @ManyToOne
-    private User receiverId;
+    @JoinColumn(name = "receiver_id")
+    private User receiver;
     private String title;
     private String content;
+    @Column(name = "create_datetime")
     private LocalDateTime createDateTime;
+    @Column(name = "seen_datetime")
     private LocalDateTime seenDateTime;
+    @Column(name = "delete_datetime")
     private LocalDateTime deleteDateTime;
 
     public Notification() {
@@ -24,7 +28,7 @@ public class Notification {
                         String title, String content, LocalDateTime createDateTime, LocalDateTime seenDateTime, LocalDateTime deleteDateTime) {
         this.id = id;
         this.senderLogin = senderLogin;
-        this.receiverId = receiverId;
+        this.receiver = receiverId;
         this.title = title;
         this.content = content;
         this.createDateTime = createDateTime;
@@ -35,7 +39,7 @@ public class Notification {
     public Notification(String senderLogin, User receiverId, String title,
                         String content, LocalDateTime createDateTime, LocalDateTime seenDateTime, LocalDateTime deleteDateTime) {
         this.senderLogin = senderLogin;
-        this.receiverId = receiverId;
+        this.receiver = receiverId;
         this.title = title;
         this.content = content;
         this.createDateTime = createDateTime;
@@ -51,8 +55,8 @@ public class Notification {
         return senderLogin;
     }
 
-    public User getReceiverId() {
-        return receiverId;
+    public User getReceiver() {
+        return receiver;
     }
 
     public String getTitle() {
@@ -73,5 +77,33 @@ public class Notification {
 
     public LocalDateTime getDeleteDateTime() {
         return deleteDateTime;
+    }
+
+    public void setSenderLogin(String senderLogin) {
+        this.senderLogin = senderLogin;
+    }
+
+    public void setReceiver(User receiver) {
+        this.receiver = receiver;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setCreateDateTime(LocalDateTime createDateTime) {
+        this.createDateTime = createDateTime;
+    }
+
+    public void setSeenDateTime(LocalDateTime seenDateTime) {
+        this.seenDateTime = seenDateTime;
+    }
+
+    public void setDeleteDateTime(LocalDateTime deleteDateTime) {
+        this.deleteDateTime = deleteDateTime;
     }
 }

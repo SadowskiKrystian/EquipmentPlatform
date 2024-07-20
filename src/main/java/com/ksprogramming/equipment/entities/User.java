@@ -1,7 +1,6 @@
 package com.ksprogramming.equipment.entities;
 
 import jakarta.persistence.*;
-import org.springframework.context.annotation.Profile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,7 +20,7 @@ public class User {
     private List<UserAuthority> userAuthorities;
     @OneToMany(mappedBy = "user")
     private List<Equipment> equipments;
-    @OneToMany(mappedBy = "receiverId")
+    @OneToMany(mappedBy = "receiver")
     private List<Notification> notification;
     @Column(name = "registration_date")
     private LocalDateTime registrationDate;

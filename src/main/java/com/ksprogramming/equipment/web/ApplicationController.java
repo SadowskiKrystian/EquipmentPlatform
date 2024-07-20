@@ -25,6 +25,11 @@ public class ApplicationController {
         this.dictionariesService = dictionariesService;
     }
 
+    @GetMapping("/notifications")
+    public String notifications(Model model) {
+        return "notifications-front";
+    }
+
     @GetMapping({"/", "/home"})
     public String home(Model model) {
         return "home-page";
