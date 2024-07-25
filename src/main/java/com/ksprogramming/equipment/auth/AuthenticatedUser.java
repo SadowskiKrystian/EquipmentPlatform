@@ -45,7 +45,8 @@ public class AuthenticatedUser {
                         new Menu(chooseMenuName("Attributes", "Atrybuty", currentLang), "/admin/attributes", Collections.emptyList())
                 ))),
                 new Menu(chooseMenuName("Notifications", "Powiadomienia", currentLang), "#", new ArrayList<>(Arrays.asList(
-                        new Menu(chooseMenuName("Send notifications", "Wyślij powiadomienia", currentLang), "/admin/notifications/send", Collections.emptyList())
+                        new Menu(chooseMenuName("Show sent notifications", "Pokaz wyslane powiadomienia", currentLang), "/admin/notifications", Collections.emptyList()),
+                        new Menu(chooseMenuName("Send notifications", "Wyślij powiadomienia", currentLang), "/admin/notification/send", Collections.emptyList())
                 ))),
                 new Menu(chooseMenuName("Contacts", "Kontakty", currentLang), "#", new ArrayList<>(Arrays.asList(
                         new Menu(chooseMenuName("People", "Ludzie", currentLang), "/admin/contacts/people", Collections.emptyList())

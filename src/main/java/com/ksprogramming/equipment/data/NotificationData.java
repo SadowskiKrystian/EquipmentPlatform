@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 public class NotificationData {
     private Long id;
     private String senderLogin;
-    private User receiverId;
+    private UserData receiverId;
     private String title;
     private String content;
     private LocalDateTime createDateTime;
@@ -17,7 +17,7 @@ public class NotificationData {
     public NotificationData() {
     }
 
-    public NotificationData(Long id, String senderLogin, User receiverId, String title,
+    public NotificationData(Long id, String senderLogin, UserData receiverId, String title,
                             String content, LocalDateTime createDateTime, LocalDateTime seenDateTime, LocalDateTime deleteDateTime) {
         this.id = id;
         this.senderLogin = senderLogin;
@@ -45,11 +45,11 @@ public class NotificationData {
         this.senderLogin = senderLogin;
     }
 
-    public User getReceiverId() {
+    public UserData getReceiverId() {
         return receiverId;
     }
 
-    public void setReceiverId(User receiverId) {
+    public void setReceiverId(UserData receiverId) {
         this.receiverId = receiverId;
     }
 

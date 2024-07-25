@@ -40,6 +40,10 @@ public class EquipmentEndPoint {
     public void updateNotification(@PathVariable("id") Long id) {
         notificationService.updateSeenNotification(id);
     }
+    @DeleteMapping("/notification/{id}")
+    public void deleteNotification(@PathVariable("id") Long id) {
+        notificationService.deleteNotification(id);
+    }
     @GetMapping("notifications/count/unseen")
     public Long countUnseenNotifications() {
         return notificationService.countUnseenNotifications();
@@ -114,9 +118,13 @@ public class EquipmentEndPoint {
     }
     private List<NotificationGetResponse> notificationsDataToResponse(List<NotificationData> notificationsByReceiverId) {
         List<NotificationGetResponse> notifications = new ArrayList<>();
-        notificationsByReceiverId.forEach(notification -> notifications.add(new NotificationGetResponse(notification.getId(), notification.getSenderLogin(), notification.getReceiverId(),
+        notificationsByReceiverId.forEach(notification -> notifications.add(new NotificationGetResponse(notification.getId(), notification.getSenderLogin(), userDataToResponse(notification.getReceiverId()),
                 notification.getTitle(), notification.getContent(), notification.getCreateDateTime(), notification.getSeenDateTime())));
         return notifications;
+    }
+    private UserGetResponse userDataToResponse(UserData user) {
+        return new UserGetResponse(user.getId(), user.getLogin(), user.getPasswordHash(),
+                user.getEmailConfirmed(), user.getLanguage(), user.getRegistrationDate());
     }
     private List<ValueData> valuesPostRequestToData(List<ValuePostRequest> values) {
         List<ValueData> list = new ArrayList<>();
@@ -163,8 +171,8 @@ public class EquipmentEndPoint {
                 });
         return attributes;
     }
-    private EquipmentUserGetResponse equipmentUserDataToGetResponse(UserData userData) {
-        return new EquipmentUserGetResponse(userData.getId(), userData.getLogin(), userData.getPasswordHash(),
+    private UserGetResponse equipmentUserDataToGetResponse(UserData userData) {
+        return new UserGetResponse(userData.getId(), userData.getLogin(), userData.getPasswordHash(),
                 userData.getEmailConfirmed(), userData.getLanguage(), userData.getRegistrationDate());
     }
 }

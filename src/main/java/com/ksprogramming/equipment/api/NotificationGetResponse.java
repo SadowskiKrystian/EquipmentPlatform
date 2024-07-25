@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 public class NotificationGetResponse {
     private Long id;
     private String senderLogin;
-    private User receiverId;
+    private UserGetResponse receiverId;
     private String title;
     private String content;
     private String createDate;
@@ -18,7 +18,7 @@ public class NotificationGetResponse {
     public NotificationGetResponse() {
     }
 
-    public NotificationGetResponse(Long id, String senderLogin, User receiverId, String title, String content, LocalDateTime createDateTime, LocalDateTime seenDateTime) {
+    public NotificationGetResponse(Long id, String senderLogin, UserGetResponse receiverId, String title, String content, LocalDateTime createDateTime, LocalDateTime seenDateTime) {
         this.id = id;
         this.senderLogin = senderLogin;
         this.receiverId = receiverId;
@@ -36,7 +36,7 @@ public class NotificationGetResponse {
         return senderLogin;
     }
 
-    public User getReceiverId() {
+    public UserGetResponse getReceiverId() {
         return receiverId;
     }
 

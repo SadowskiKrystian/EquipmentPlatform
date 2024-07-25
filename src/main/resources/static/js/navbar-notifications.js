@@ -60,7 +60,7 @@ function findNotifications() {
     })
         .done(function (response) {
             fillDropdownBody(response);
-           // fillNotificationsCounter(0);
+            fillNotificationsCounter(0);
         })
         .fail(function(jqxhr, textStatus, errorThrown){
             displayErrorInformation(jqxhr.responseText);
@@ -95,29 +95,28 @@ function fillDropdownBody(notifications) {
 }
 
 function prepareNotificationCode(notification) {
-    id = notification.id;
     let link = notification.link;
     let createDatetime = notification.createDate;
     let title = notification.title;
     let content = notification.content;
     let newInfo = '';
 
-    if(notification.seen) {
+    if(!notification.seenDateTime) {
         newInfo = '<span style="color: red"><i class="fas fa-circle"></i> </span>';
     }
 
-    let code = '';
-    code += '<a class="dropdown-item" href="/notifications" onclick="updateSeenNotifications()">';
-    code +=     '<div><b>' + newInfo + title + '</b></div>';
-    code +=     '<div>' + content + '</div>';
-    code +=     '<div class="text-muted small text-right">' + createDatetime + '</div>';
-    code += '</a>';
-    code += '<div class="dropdown-divider"></div>';
+    let code = "";
+    code += "<a class='dropdown-item' href='/notifications' onclick='updateSeenNotifications(" + notification.id +  ")'>";
+    code +=     "<div><b>" + newInfo + title + "</b></div>";
+    code +=     "<div>" + content + "</div>";
+    code +=     "<div class='text-muted small text-right'>" + createDatetime + "</div>";
+    code += "</a>";
+    code += "<div class='dropdown-divider'></div>";
 
     return code;
 }
 
-function updateSeenNotifications() {
+function updateSeenNotifications(id) {
     $.ajax({
         url: "/api/crs/notification/" + id,
         type: "PUT",

@@ -3,7 +3,7 @@ package com.ksprogramming.equipment.api;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class EquipmentUserGetResponse {
+public class UserGetResponse {
     private Long id;
     private String login;
     private String passwordHash;
@@ -12,13 +12,18 @@ public class EquipmentUserGetResponse {
     private String registrationDate;
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public EquipmentUserGetResponse(Long id, String login, String passwordHash, Boolean emailConfirmed, String language, LocalDateTime registrationDate) {
+    public UserGetResponse(Long id, String login, String passwordHash, Boolean emailConfirmed, String language, LocalDateTime registrationDate) {
         this.id = id;
         this.login = login;
         this.passwordHash = passwordHash;
         this.emailConfirmed = emailConfirmed;
         this.language = language;
         this.registrationDate = registrationDate.format(FORMATTER);
+    }
+
+    public UserGetResponse(Long id, String login) {
+        this.id = id;
+        this.login = login;
     }
 
     public Long getId() {

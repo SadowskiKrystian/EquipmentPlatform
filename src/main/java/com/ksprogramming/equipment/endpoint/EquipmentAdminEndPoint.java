@@ -7,12 +7,10 @@ import com.ksprogramming.equipment.enumes.AttributeType;
 import com.ksprogramming.equipment.enumes.DictionaryType;
 import com.ksprogramming.equipment.enumes.Language;
 import com.ksprogramming.equipment.service.*;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -26,9 +24,11 @@ public class EquipmentAdminEndPoint {
     private DictionariesService dictionariesService;
     private EmailServiceInterface emailService;
     private TokenServiceInterface tokenService;
+    private NotificationServiceInterface notificationService;
+
     public EquipmentAdminEndPoint(EquipmentServiceInterface equipmentService, AssignedAttributeService assignedAttributeService,
                                   AttributeServiceInterface attributeService, UserServiceInterface userService,
-                                  UserAuthorityServiceInterface userAuthorityService, DictionariesService dictionariesService, EmailServiceInterface emailService, TokenServiceInterface tokenService) {
+                                  UserAuthorityServiceInterface userAuthorityService, DictionariesService dictionariesService, EmailServiceInterface emailService, TokenServiceInterface tokenService, NotificationServiceInterface notificationService) {
         this.equipmentService = equipmentService;
         this.assignedAttributeService = assignedAttributeService;
         this.attributeService = attributeService;
@@ -37,15 +37,45 @@ public class EquipmentAdminEndPoint {
         this.dictionariesService = dictionariesService;
         this.emailService = emailService;
         this.tokenService = tokenService;
+        this.notificationService = notificationService;
+    }
+    @PostMapping("/notification")
+    public void createNotification(@RequestBody CreateNotificationPostRequest request) {
+        NotificationData notificationData = new NotificationData();
+        notificationData.setTitle(request.getTitle());
+        notificationData.setContent(request.getContent());
+        request.getUsers().forEach(user -> {
+            UserData userById = userService.getUserById(user);
+            notificationData.setReceiverId(userById);
+            notificationService.createNotification(notificationData);
+        });
+    }
+    @GetMapping("/notifications")
+    public List<NotificationGetResponse> findAllNotifications() {
+        return notificationsDataToRespone(notificationService.findAllNotifications());
+    }
+    @DeleteMapping("/notification/{id}")
+    public void deleteNotification(@PathVariable("id") Long id) {
+        notificationService.deleteNotification(id);
+    }
+
+    private List<NotificationGetResponse> notificationsDataToRespone(List<NotificationData> notifications) {
+        List<NotificationGetResponse> responses = new ArrayList<>();
+        notifications.forEach(notification -> {
+            responses.add(new NotificationGetResponse(notification.getId(), notification.getSenderLogin(), userDataToGetResponse(notification.getReceiverId()),
+                    notification.getTitle(), notification.getContent(), notification.getCreateDateTime(), notification.getSeenDateTime()))
+            ;
+        });
+        return responses;
     }
 
     @GetMapping("/users")
-    public List<EquipmentUserGetResponse> findAllEquipmentUsers() {
-        return equipmentUsersDataToResponse(userService.findAll());
+    public List<UserGetResponse> findAllEquipmentUsers() {
+        return usersDataToResponse(userService.findAll());
     }
 
     @PostMapping("/user")
-    public void createUser(@RequestBody EquipmentUserPostRequest request) {
+    public void createUser(@RequestBody UserPostRequest request) {
         userService.registerUser(new UserData(
                 request.getLogin(),
                 request.getPasswordHash(),
@@ -54,84 +84,103 @@ public class EquipmentAdminEndPoint {
                 userAuthoritiesArrayToList(request.getAuthorities()),
                 LocalDateTime.now()));
     }
+
     @PutMapping("/user/{id}")
-    public void updateUser(@PathVariable Long id, @RequestBody EquipmentUserPutRequest equipmentUserPutRequest) {
+    public void updateUser(@PathVariable Long id, @RequestBody UserPutRequest equipmentUserPutRequest) {
         userService.update(equipmentUserPutRequestToData(id, equipmentUserPutRequest));
     }
+
     @DeleteMapping("/user/{id}")
     public void deleteUser(@PathVariable Long id) {
         userService.delete(id);
     }
+
     @PutMapping("/user-change-password/{id}")
     public void changePassword(@PathVariable Long id, @RequestBody ChangePasswordRequest request) {
         userService.changePasswordAdmin(id, request.getNewPasswordHash());
     }
+
     @GetMapping("/authority/{id}")
     public List<UserAuthorityGetResponse> findAuthorityById(@PathVariable Long id) {
         return userAuthoritiesDataToGetResponse(userAuthorityService.findById(id));
     }
+
     @GetMapping("/attribute/{id}")
     public AttributeWithDetailsGetResponse getAttribute(@PathVariable Long id) {
         return new AttributeWithDetailsGetResponse(attributeDataToResponse(attributeService.getAttribute(id)),
                 assignedAttributeDataToResponse(assignedAttributeService.getAttributeWithValues(id)));
     }
+
     @GetMapping("/attributes")
     public List<AttributeGetResponse> findAttributes() {
         return attributesDataToResponse(attributeService.findAttributes());
     }
+
     @GetMapping("/attribute-types")
     public AttributeType[] getAttributeTypes() {
         return AttributeType.values();
     }
+
     @GetMapping("/attribute/value/{id}")
     public List<AssignedAttributeGetResponse> attributeWithValues(@PathVariable Long id) {
         return assignedAttributeDataToResponse(attributeService.findAttributesWithValue(id));
     }
+
     @PutMapping("/attribute/{id}")
     public void updateAttribute(@PathVariable Long id, @RequestBody AttributeGetRequest attributeGetRequest) {
         AttributeData attributeData = new AttributeData(id, attributeGetRequest.getName(), attributeGetRequest.getType(), attributeGetRequest.getDomain());
         attributeService.update(attributeData);
     }
+
     @PostMapping("/attribute")
     public void createAttribute(@RequestBody AttributePostRequest attributePostRequest) {
         attributeService.create(attributeRequestToData(attributePostRequest));
     }
+
     @DeleteMapping("/attribute/{id}")
     public void deleteAttribute(@PathVariable Long id) {
         attributeService.delete(id);
     }
+
     @PostMapping("/equipment")
     public void createEquipment(@RequestBody EquipmentPostRequest equipmentPostRequest) {
         EquipmentData equipment = new EquipmentData(userService.getLoggedUser(), equipmentPostRequest.getName(), LocalDateTime.now());
         equipmentService.create(equipment, valuesPostRequestToData(equipmentPostRequest.getValues()));
     }
+
     @GetMapping("/equipments")
     public List<EquipmentGetResponse> findAll() {
-      return equipmentsDataToEquipmentsGetResponse();
+        return equipmentsDataToEquipmentsGetResponse();
     }
+
     @GetMapping("/equipments/attributes")
     public List<AttributeGetResponse> indAllAttributes() {
         return attributesDataToResponse(attributeService.findAttributesByDomain());
     }
+
     @GetMapping("/equipment/{id}")
     public EquipmentWithAttributesGetResponse get(@PathVariable Long id) {
         EquipmentsWithDetailsData equipmentsWithDetails = equipmentService.get(id);
         return prepareEquipmentWithAttributesGetResponse(
                 equipmentsWithDetails.getEquipment(), equipmentsWithDetails.getAttributes(), attributeService.findAttributesByDomain());
     }
+
     @DeleteMapping("/equipment/{id}")
     public void deleteEquipment(@PathVariable Long id) {
         equipmentService.remove(id);
     }
+
     @PutMapping("/equipment/{id}")
     public void updateEquipment(@PathVariable Long id, @RequestBody EquipmentPutRequest request) {
         EquipmentData equipment = new EquipmentData(id, userService.getLoggedUser(), request.getName(), LocalDateTime.now());
         equipmentService.update(equipment, valuesPutRequestToData(request.getValues()));
     }
+
     @GetMapping("/dictionaries")
     public List<DictionaryData> getAttributesTypeDictionary() {
         return dictionariesService.getDictionary(DictionaryType.ATTRIBUTE_TYPES, Language.PL);
     }
+
     private List<ValueData> valuesPostRequestToData(List<ValuePostRequest> values) {
         List<ValueData> list = new ArrayList<>();
         values.forEach(value -> {
@@ -139,46 +188,53 @@ public class EquipmentAdminEndPoint {
         });
         return list;
     }
-    private UserData equipmentUserPutRequestToData(Long id, EquipmentUserPutRequest equipmentUserPutRequest) {
+
+    private UserData equipmentUserPutRequestToData(Long id, UserPutRequest equipmentUserPutRequest) {
         UserData userData = new UserData(id, equipmentUserPutRequest.getLogin(),
                 equipmentUserPutRequest.getEmailConfirmed(), equipmentUserPutRequest.getLanguage(),
                 userAuthoritiesArrayToList(equipmentUserPutRequest.getAuthorities()));
         return userData;
     }
+
     private List<UserAuthorityData> userAuthoritiesArrayToList(String[] authorities) {
         List<UserAuthorityData> list = new ArrayList<>();
-        for(String authority : authorities){
+        for (String authority : authorities) {
             list.add(new UserAuthorityData(Authority.valueOf(authority).getCodeWithRole()));
         }
         return list;
     }
+
     private List<UserAuthorityGetResponse> userAuthoritiesDataToGetResponse(List<UserAuthorityData> userAuthorityDataList) {
         List<UserAuthorityGetResponse> userAuthorityGetResponseList = new ArrayList<>();
         userAuthorityDataList.stream()
                 .forEach(authority -> {
                     userAuthorityGetResponseList.add(new UserAuthorityGetResponse(authority.getId(),
-                            equipmentUserDataToGetResponse(authority.getUserData()),
+                            userDataToGetResponse(authority.getUserData()),
                             Authority.findByCodeWithRole(authority.getAuthority()).toString()));
                 });
 
         return userAuthorityGetResponseList;
     }
-    private EquipmentUserGetResponse equipmentUserDataToGetResponse(UserData equipmentUserData) {
-        return new EquipmentUserGetResponse(equipmentUserData.getId(), equipmentUserData.getLogin(), equipmentUserData.getPasswordHash(),
-                equipmentUserData.getEmailConfirmed(), equipmentUserData.getLanguage(), equipmentUserData.getRegistrationDate());
+
+    private UserGetResponse userDataToGetResponse(UserData user) {
+        return new UserGetResponse(user.getId(), user.getLogin(), user.getPasswordHash(),
+                user.getEmailConfirmed(), user.getLanguage(), user.getRegistrationDate());
     }
-    private List<EquipmentUserGetResponse> equipmentUsersDataToResponse(List<UserData> equipmentUserData) {
-        List<EquipmentUserGetResponse> list = new ArrayList<>();
+
+    private List<UserGetResponse> usersDataToResponse(List<UserData> equipmentUserData) {
+        List<UserGetResponse> list = new ArrayList<>();
         equipmentUserData.stream()
                 .forEach(user -> {
-                    list.add(new EquipmentUserGetResponse(user.getId(), user.getLogin(), user.getPasswordHash(),
+                    list.add(new UserGetResponse(user.getId(), user.getLogin(), user.getPasswordHash(),
                             user.getEmailConfirmed(), user.getLanguage(), user.getRegistrationDate()));
                 });
         return list;
     }
+
     private AttributeData attributeRequestToData(AttributePostRequest attributePostRequest) {
         return new AttributeData(attributePostRequest.getName(), attributePostRequest.getType(), attributePostRequest.getDomain(), LocalDateTime.now());
     }
+
     private List<AttributeGetResponse> attributesDataToResponse(List<AttributeData> attributesData) {
         List<AttributeGetResponse> attributes = new ArrayList<>();
         attributesData.stream()
@@ -187,6 +243,7 @@ public class EquipmentAdminEndPoint {
                 });
         return attributes;
     }
+
     private static EquipmentWithAttributesGetResponse prepareEquipmentWithAttributesGetResponse(EquipmentData equipmentData, List<AttributeData> assignedAttributesData, List<AttributeData> attributesData) {
         List<AttributeGetResponse> assignedAttributes = new ArrayList<>();
         assignedAttributesData.stream()
@@ -199,16 +256,18 @@ public class EquipmentAdminEndPoint {
         return new EquipmentWithAttributesGetResponse(new EquipmentGetResponse(equipmentData),
                 assignedAttributes, attributes);
     }
+
     private List<EquipmentGetResponse> equipmentsDataToEquipmentsGetResponse() {
         List<EquipmentGetResponse> equipments = new ArrayList<>();
         equipmentService.findAll().stream()
                 .forEach(equipment -> equipments.add(new EquipmentGetResponse(equipment.getId()
-                        , equipmentUserDataToGetResponse(equipment.getUserData())
+                        , userDataToGetResponse(equipment.getUserData())
                         , equipment.getName()
                         , equipment.getCreateDate()
                         , equipment.getEditDate())));
         return equipments;
     }
+
     private List<AssignedAttributeGetResponse> assignedAttributeDataToResponse(List<AssignedAttributeData> assignedAttributesData) {
         List<AssignedAttributeGetResponse> list = new ArrayList<>();
         assignedAttributesData.stream()
@@ -217,9 +276,11 @@ public class EquipmentAdminEndPoint {
                 });
         return list;
     }
+
     private AttributeGetResponse attributeDataToResponse(AttributeData attribute) {
         return new AttributeGetResponse(attribute);
     }
+
     private List<ValueData> valuesPutRequestToData(List<ValuePutRequest> values) {
         List<ValueData> list = new ArrayList<>();
         values.forEach(value -> {

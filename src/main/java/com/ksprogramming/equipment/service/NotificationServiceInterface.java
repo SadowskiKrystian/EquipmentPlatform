@@ -8,5 +8,7 @@ public interface NotificationServiceInterface {
     NotificationData createNotification(NotificationData notificationData);
     List<NotificationData> findNotificationsByReceiverId();
     Long countUnseenNotifications();
-    void updateSeenNotification(Long notificationId);
+    void updateSeenNotification(Long id);
+    void deleteNotification(Long id);
+    List<NotificationData> findAllNotifications();
 }

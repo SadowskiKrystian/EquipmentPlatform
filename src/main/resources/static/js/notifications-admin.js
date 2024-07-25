@@ -6,7 +6,7 @@ $(document).ready(function () {
 
 function findFrontNotifications() {
     $.ajax({
-        url: "/api/crs/notifications",
+        url: "/admin/api/crs/notifications",
         type: "get",
         dataType: "json",
         contentType: "application/json"
@@ -20,11 +20,11 @@ function findFrontNotifications() {
 }
 function deleteNotification(id) {
     $.ajax({
-        url: "/api/crs/notification/" + id,
+        url: "/admin/api/crs/notification/" + id,
         type: "delete"
     })
         .done(function (response) {
-            findNotifications();
+            findFrontNotifications();
 
         })
         .fail(function (jqxhr, textStatus, errorThrown) {

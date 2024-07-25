@@ -21,6 +21,26 @@ body {
 .page-container {
     width: 75px;
 }
+.container,
+.container-fluid,
+.container-xl,
+.container-lg,
+.container-md,
+.container-sm {
+    width: 100%;
+    padding-right: 1.5rem;
+    padding-left: 1.5rem;
+    margin-right: auto;
+    margin-left: auto;
+    border: 2px solid lightgrey;
+    border-radius: 5px;
+}
+.container {
+    min-width: 992px !important;
+}
+.content{
+    resize: none;
+}
 
 #ui-datepicker-div {
     position: absolute !important;
@@ -57,6 +77,27 @@ header div:last-of-type {
     float: right; 
 }
 
+/*NOTIFICATION*/
+
+.notification-div:nth-of-type(odd){
+    background-color: lightyellow;
+    border-radius: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-bottom: 10px;
+}
+.notification-div:nth-of-type(even){
+    background-color: lightgrey;
+    border-radius: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-bottom: 10px;
+}
+
+.notification-delete-button{
+    position: relative;
+    left: 50%;
+}
 
 /*NAV*/
 
