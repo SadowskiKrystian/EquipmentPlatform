@@ -22,7 +22,8 @@ public class SecurityConfig {
                 authorize -> authorize
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/equipments-front", "/equipment-front/", "/create-equipment-front", "/api/crs/equipment",
-                                "/api/crs/equipment/", "/api/crs/equipments", "/api/crs/equipments/attributes").authenticated()
+                                "/api/crs/equipment/", "/api/crs/equipments", "/api/crs/equipments/attributes", "/api/crs/notification/,",
+                                        "/api/crs/notifications", "/api/crs/notifications/count/unseen").authenticated()
                         .anyRequest().permitAll()
 
         );

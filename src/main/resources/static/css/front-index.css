@@ -26,6 +26,24 @@ body {
 .bg-computing-college-blue {
     background-color: #0084ff;
 }
+.notification-div:nth-of-type(odd){
+    background-color: white;
+    border-radius: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-bottom: 10px;
+}
+.notification-div:nth-of-type(even){
+    background-color: lightgrey;
+    border-radius: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-bottom: 10px;
+}
+.notification-delete-button{
+   position: relative;
+    left: 50%;
+}
 
 .adviser-message {
     border-radius: 25px;

@@ -6,5 +6,6 @@ lang = {
     Course : "Course",
     Code : "Code",
     Selection : "Selection",
-    Product : "Product"
+    Product : "Product",
+    noNotifications : 'No notifications'
 };

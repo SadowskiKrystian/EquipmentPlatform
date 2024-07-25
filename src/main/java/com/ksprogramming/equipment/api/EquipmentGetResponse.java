@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 
 public class EquipmentGetResponse {
     private Long id;
-    private EquipmentUserGetResponse equipmentUserGetResponse;
+    private UserGetResponse equipmentUserGetResponse;
     private String name;
     private String createDate;
     private String editDate;
@@ -22,7 +22,7 @@ public class EquipmentGetResponse {
         this.name = equipmentData.getName();
     }
 
-    public EquipmentGetResponse(Long id, EquipmentUserGetResponse equipmentUserGetResponse, String name, LocalDateTime createDate, LocalDateTime editDate) {
+    public EquipmentGetResponse(Long id, UserGetResponse equipmentUserGetResponse, String name, LocalDateTime createDate, LocalDateTime editDate) {
         this.id = id;
         this.equipmentUserGetResponse = equipmentUserGetResponse;
         this.name = name;
@@ -50,7 +50,7 @@ public class EquipmentGetResponse {
         return name;
     }
 
-    public EquipmentUserGetResponse getEquipmentUserGetResponse() {
+    public UserGetResponse getEquipmentUserGetResponse() {
         return equipmentUserGetResponse;
     }
 }

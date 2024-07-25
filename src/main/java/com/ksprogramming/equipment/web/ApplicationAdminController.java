@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -26,7 +27,14 @@ public class ApplicationAdminController {
     public String admin() {
         return "admin";
     }
-
+    @GetMapping({"/notifications"})
+    public String notifications(Model model) {
+        return "notifications-admin";
+    }
+    @GetMapping({"/notification/send"})
+    public String notificationCreate() {
+        return "create-notification";
+    }
     @GetMapping({"/equipments"})
     public String equipments(Model model) {
         return "equipments-admin";
