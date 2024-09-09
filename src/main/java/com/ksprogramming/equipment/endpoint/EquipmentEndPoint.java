@@ -6,6 +6,7 @@ import com.ksprogramming.equipment.enumes.Authority;
 import com.ksprogramming.equipment.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,9 +22,9 @@ public class EquipmentEndPoint {
     private EmailServiceInterface emailService;
     private TokenServiceInterface tokenService;
     private NotificationServiceInterface notificationService;
-
+    private FileStorageServiceInterface fileStorageService;
     public EquipmentEndPoint(UserServiceInterface userService, EquipmentServiceInterface equipmentService,
-                             AttributeServiceInterface attributeService, AssignedAttributeServiceInterface assignedAttributeService, EmailServiceInterface emailService, TokenServiceInterface tokenService, NotificationServiceInterface notificationService) {
+                             AttributeServiceInterface attributeService, AssignedAttributeServiceInterface assignedAttributeService, EmailServiceInterface emailService, TokenServiceInterface tokenService, NotificationServiceInterface notificationService, FileStorageServiceInterface fileStorageService) {
         this.userService = userService;
         this.equipmentService = equipmentService;
         this.attributeService = attributeService;
@@ -31,6 +32,12 @@ public class EquipmentEndPoint {
         this.emailService = emailService;
         this.tokenService = tokenService;
         this.notificationService = notificationService;
+        this.fileStorageService = fileStorageService;
+    }
+
+    @PostMapping("/image")
+    public void uploadImage(@RequestParam("file") MultipartFile file){
+        fileStorageService.saveImageOnServer(file);
     }
     @GetMapping("/notifications")
     public List<NotificationGetResponse> findNotificationByReceiverId() {
