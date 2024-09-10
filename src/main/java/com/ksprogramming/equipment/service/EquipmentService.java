@@ -2,10 +2,7 @@ package com.ksprogramming.equipment.service;
 
 import com.ksprogramming.equipment.api.ValuePutRequest;
 import com.ksprogramming.equipment.data.*;
-import com.ksprogramming.equipment.entities.AssignedAttribute;
-import com.ksprogramming.equipment.entities.Attribute;
-import com.ksprogramming.equipment.entities.Equipment;
-import com.ksprogramming.equipment.entities.User;
+import com.ksprogramming.equipment.entities.*;
 import com.ksprogramming.equipment.enumes.DomainType;
 import com.ksprogramming.equipment.repository.AssignedAttributeRepository;
 import com.ksprogramming.equipment.repository.AttributeRepository;
@@ -117,9 +114,18 @@ public class EquipmentService implements EquipmentServiceInterface{
     }
 
     private Equipment equipmentDataToEntity(EquipmentData equipmentData) {
-        return new Equipment(equipmentData.getId(), equipmentUserDataToEntity(equipmentData.getUserData()),
+        Picture picture = null;
+        if (equipmentData.getPictureData() != null) {
+            picture = pictureDataToEntity(equipmentData.getPictureData());
+        }
+        return new Equipment(equipmentData.getId(), equipmentUserDataToEntity(equipmentData.getUserData()), picture,
                 equipmentData.getName(), equipmentData.getCreateDate(), equipmentData.getEditDate(), equipmentData.getRemoveDate());
     }
+
+    private Picture pictureDataToEntity(PictureData pictureData) {
+        return new Picture(pictureData.getId(), pictureData.getName(), pictureData.getCreateDate());
+    }
+
     private User equipmentUserDataToEntity(UserData userData){
         return new User(userData.getId(), userData.getLogin(),
                 userData.getPasswordHash(), userData.getEmailConfirmed(), userData.getLanguage(),
@@ -137,15 +143,24 @@ public class EquipmentService implements EquipmentServiceInterface{
     }
 
     private EquipmentData equipmentEntityToData(Equipment equipment) {
+        PictureData pictureData = null;
+        if (equipment.getPicture() != null) {
+            pictureData = pictureEntityToData(equipment.getPicture());
+        }
         EquipmentData equipmentData = EquipmentData.builder()
                 .id(equipment.getId())
                 .userData(equipmentUserEntityToData(equipment.getUser()))
+                .pictureData(pictureData)
                 .name(equipment.getName())
                 .createDate(equipment.getCreateDate())
                 .editDate(equipment.getEditDate())
                 .removeDate(equipment.getRemoveDate())
                 .build();
         return equipmentData;
+    }
+
+    private PictureData pictureEntityToData(Picture picture) {
+        return new PictureData(picture.getId(), picture.getName(), picture.getCreateDate());
     }
 
     private UserData equipmentUserEntityToData(User user) {

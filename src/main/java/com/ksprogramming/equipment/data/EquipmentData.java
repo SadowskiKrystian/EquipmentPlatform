@@ -5,23 +5,33 @@ import java.time.LocalDateTime;
 public class EquipmentData {
     private Long id;
     private UserData userData;
+    private PictureData pictureData;
     private String name;
     private LocalDateTime createDate;
     private LocalDateTime editDate;
     private LocalDateTime removeDate;
 
 
-    private EquipmentData(Long id, UserData userData, String name, LocalDateTime createDate, LocalDateTime editDate, LocalDateTime removeDate) {
+    private EquipmentData(Long id, UserData userData, PictureData pictureData, String name, LocalDateTime createDate, LocalDateTime editDate, LocalDateTime removeDate) {
         this.id = id;
         this.userData = userData;
+        this.pictureData = pictureData;
         this.name = name;
         this.createDate = createDate;
         this.editDate = editDate;
         this.removeDate = removeDate;
     }
 
+
     public EquipmentData(UserData userData, String name, LocalDateTime createDate) {
         this.userData = userData;
+        this.name = name;
+        this.createDate = createDate;
+    }
+
+    public EquipmentData(UserData userData, PictureData pictureData, String name, LocalDateTime createDate) {
+        this.userData = userData;
+        this.pictureData = pictureData;
         this.name = name;
         this.createDate = createDate;
     }
@@ -81,6 +91,14 @@ public class EquipmentData {
         this.userData = userData;
     }
 
+    public PictureData getPictureData() {
+        return pictureData;
+    }
+
+    public void setPictureData(PictureData pictureData) {
+        this.pictureData = pictureData;
+    }
+
     public static EquipmentDataBuilder builder() {
         return new EquipmentDataBuilder();
     }
@@ -89,6 +107,7 @@ public class EquipmentData {
     public static class EquipmentDataBuilder {
         private Long id;
         private UserData userData;
+        private PictureData pictureData;
         private String name;
         private LocalDateTime createDate;
         private LocalDateTime editDate;
@@ -101,6 +120,10 @@ public class EquipmentData {
         }
         public EquipmentDataBuilder userData(UserData userData){
             this.userData = userData;
+            return this;
+        }
+        public EquipmentDataBuilder pictureData(PictureData pictureData){
+            this.pictureData = pictureData;
             return this;
         }
 
@@ -124,7 +147,7 @@ public class EquipmentData {
         }
 
         public EquipmentData build() {
-            return new EquipmentData(id, userData, name, createDate, editDate, removeDate);
+            return new EquipmentData(id, userData, pictureData, name, createDate, editDate, removeDate);
         }
     }
 }

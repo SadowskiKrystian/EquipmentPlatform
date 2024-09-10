@@ -7,15 +7,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.UUID;
 
 @Service
 public class FileStorageService implements FileStorageServiceInterface {
     public String saveImageOnServer(MultipartFile file) {
         try {
-            System.out.println(file.getName());
             String fileStorageLocation = "./src/main/resources/static/image";
-            String fileName = UUID.randomUUID().toString() + ".jpg";
+            String fileName = file.getOriginalFilename();
             Path path = Paths.get(fileStorageLocation, fileName);
             Files.write(path, file.getBytes());
             return fileName;

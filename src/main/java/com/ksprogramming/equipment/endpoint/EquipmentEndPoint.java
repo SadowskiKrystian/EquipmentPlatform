@@ -1,16 +1,23 @@
 package com.ksprogramming.equipment.endpoint;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ksprogramming.equipment.api.*;
 import com.ksprogramming.equipment.data.*;
 import com.ksprogramming.equipment.enumes.Authority;
 import com.ksprogramming.equipment.service.*;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/crs")
@@ -23,8 +30,10 @@ public class EquipmentEndPoint {
     private TokenServiceInterface tokenService;
     private NotificationServiceInterface notificationService;
     private FileStorageServiceInterface fileStorageService;
+    private PictureServiceInterface pictureService;
+
     public EquipmentEndPoint(UserServiceInterface userService, EquipmentServiceInterface equipmentService,
-                             AttributeServiceInterface attributeService, AssignedAttributeServiceInterface assignedAttributeService, EmailServiceInterface emailService, TokenServiceInterface tokenService, NotificationServiceInterface notificationService, FileStorageServiceInterface fileStorageService) {
+                             AttributeServiceInterface attributeService, AssignedAttributeServiceInterface assignedAttributeService, EmailServiceInterface emailService, TokenServiceInterface tokenService, NotificationServiceInterface notificationService, FileStorageServiceInterface fileStorageService, PictureServiceInterface pictureService) {
         this.userService = userService;
         this.equipmentService = equipmentService;
         this.attributeService = attributeService;
@@ -33,11 +42,14 @@ public class EquipmentEndPoint {
         this.tokenService = tokenService;
         this.notificationService = notificationService;
         this.fileStorageService = fileStorageService;
+        this.pictureService = pictureService;
     }
 
     @PostMapping("/image")
-    public void uploadImage(@RequestParam("file") MultipartFile file){
-        fileStorageService.saveImageOnServer(file);
+    public void createImage(@RequestParam("file") MultipartFile file){
+        String fileName = fileStorageService.saveImageOnServer(file);
+        pictureService.createPicture(new PictureData(fileName));
+
     }
     @GetMapping("/notifications")
     public List<NotificationGetResponse> findNotificationByReceiverId() {
@@ -111,9 +123,29 @@ public class EquipmentEndPoint {
         equipmentService.update(equipment, valuesPutRequestToData(request.getValues()));
     }
     @PostMapping("/equipment")
-    public void createEquipment(@RequestBody EquipmentPostRequest equipmentPostRequest) {
-        EquipmentData equipment = new EquipmentData(userService.getLoggedUser(), equipmentPostRequest.getName(), LocalDateTime.now());
+    public void createEquipment(@RequestParam(value = "file", required = false) MultipartFile file, @RequestParam("json") String json) {
+        String fileName;
+        PictureData picture = null;
+        EquipmentPostRequest equipmentPostRequest;
+        if (file != null){
+            fileName = fileStorageService.saveImageOnServer(file);
+             picture = pictureService.createPicture(new PictureData(fileName));
+        }
+        try{
+            ObjectMapper mapper = new ObjectMapper();
+             equipmentPostRequest = mapper.readValue(json, EquipmentPostRequest.class);
+            System.out.println(equipmentPostRequest.getName());
+            equipmentPostRequest.getValues().forEach(value -> System.out.println(value.getValue()));
+            System.out.println();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        EquipmentData equipment = new EquipmentData(userService.getLoggedUser(), picture, equipmentPostRequest.getName(), LocalDateTime.now());
         equipmentService.create(equipment, valuesPostRequestToData(equipmentPostRequest.getValues()));
+    }
+    @PostMapping("/equipment-copy")
+    public void replaceCreateEquipment(@RequestParam("file")MultipartFile file, @RequestParam("json") String json) {
+
     }
     @GetMapping("/equipments")
     public List<EquipmentGetResponse> findAll(@RequestParam(name = "name", required = false) String name) {
