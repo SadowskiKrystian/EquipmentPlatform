@@ -5,17 +5,17 @@ import java.time.LocalDateTime;
 public class EquipmentData {
     private Long id;
     private UserData userData;
-    private PictureData pictureData;
+    private PictureData picture;
     private String name;
     private LocalDateTime createDate;
     private LocalDateTime editDate;
     private LocalDateTime removeDate;
 
 
-    private EquipmentData(Long id, UserData userData, PictureData pictureData, String name, LocalDateTime createDate, LocalDateTime editDate, LocalDateTime removeDate) {
+    private EquipmentData(Long id, UserData userData, PictureData picture, String name, LocalDateTime createDate, LocalDateTime editDate, LocalDateTime removeDate) {
         this.id = id;
         this.userData = userData;
-        this.pictureData = pictureData;
+        this.picture = picture;
         this.name = name;
         this.createDate = createDate;
         this.editDate = editDate;
@@ -29,11 +29,19 @@ public class EquipmentData {
         this.createDate = createDate;
     }
 
-    public EquipmentData(UserData userData, PictureData pictureData, String name, LocalDateTime createDate) {
+    public EquipmentData(UserData userData, PictureData picture, String name, LocalDateTime createDate) {
         this.userData = userData;
-        this.pictureData = pictureData;
+        this.picture = picture;
         this.name = name;
         this.createDate = createDate;
+    }
+
+    public EquipmentData(Long id, UserData userData, PictureData picture, String name, LocalDateTime editDate) {
+        this.id = id;
+        this.userData = userData;
+        this.picture = picture;
+        this.name = name;
+        this.editDate = editDate;
     }
 
     public EquipmentData(Long id, UserData userData, String name, LocalDateTime createDate) {
@@ -91,12 +99,12 @@ public class EquipmentData {
         this.userData = userData;
     }
 
-    public PictureData getPictureData() {
-        return pictureData;
+    public PictureData getPicture() {
+        return picture;
     }
 
-    public void setPictureData(PictureData pictureData) {
-        this.pictureData = pictureData;
+    public void setPicture(PictureData picture) {
+        this.picture = picture;
     }
 
     public static EquipmentDataBuilder builder() {

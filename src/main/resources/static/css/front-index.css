@@ -2,6 +2,10 @@ body {
     background-color: #f2f2f2;
 }
 
+.file-input:hover{
+    cursor: pointer;
+}
+
 .product:hover{
     box-shadow: 8px 8px 5px blue;
     transform: scale(1.1);

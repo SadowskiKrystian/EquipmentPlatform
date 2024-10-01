@@ -41,7 +41,6 @@ function fillCreateResults(attributes){
         "</div>" +
         "<div class='form-group'>" +
         "<input type='file' id='fileInput' name='file' class='form-check-label'>" +
-        // "<button type='submit'>Upload</button>" +
         "</div>" +
         "</form>"
     );

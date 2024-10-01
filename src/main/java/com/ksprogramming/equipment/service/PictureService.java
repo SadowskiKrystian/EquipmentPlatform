@@ -17,14 +17,19 @@ public class PictureService implements PictureServiceInterface {
     }
 
     public PictureData createPicture(PictureData pictureData) {
+        pictureData.setCreateDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
+        return pictureEntityToData(pictureRepository.save(pictureDataToEntity(pictureData)));
+    }
+    public PictureData updatePicture(PictureData pictureData) {
+        pictureData.setUpdateDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         return pictureEntityToData(pictureRepository.save(pictureDataToEntity(pictureData)));
     }
 
     private PictureData pictureEntityToData(Picture picture) {
-        return new PictureData(picture.getId(), picture.getName(), picture.getCreateDate());
+        return new PictureData(picture.getId(), picture.getName(), picture.getCreateDate(), picture.getUpdateDate());
     }
 
     private Picture pictureDataToEntity(PictureData pictureData) {
-        return new Picture(pictureData.getName(), LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
+        return new Picture(pictureData.getId(), pictureData.getPath(), pictureData.getCreateDate(), pictureData.getUpdateDate());
     }
 }

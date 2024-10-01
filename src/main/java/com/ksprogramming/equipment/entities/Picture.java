@@ -39,6 +39,19 @@ public class Picture {
         this.createDate = createDate;
     }
 
+    public Picture(String name, LocalDateTime createDate, LocalDateTime updateDate) {
+        this.name = name;
+        this.createDate = createDate;
+        this.updateDate = updateDate;
+    }
+
+    public Picture(Long id, String name, LocalDateTime createDate, LocalDateTime updateDate) {
+        this.id = id;
+        this.name = name;
+        this.createDate = createDate;
+        this.updateDate = updateDate;
+    }
+
     public Long getId() {
         return id;
     }

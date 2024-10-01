@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public class PictureData {
     private Long id;
-    private String name;
+    private String path;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
     private LocalDateTime deleteDate;
@@ -12,35 +12,42 @@ public class PictureData {
     public PictureData() {
     }
 
-    public PictureData(Long id, String name, LocalDateTime createDate, LocalDateTime updateDate, LocalDateTime deleteDate) {
+    public PictureData(Long id, String path, LocalDateTime createDate, LocalDateTime updateDate, LocalDateTime deleteDate) {
         this.id = id;
-        this.name = name;
+        this.path = path;
         this.createDate = createDate;
         this.updateDate = updateDate;
         this.deleteDate = deleteDate;
     }
 
-    public PictureData(Long id, String name, LocalDateTime createDate) {
+    public PictureData(Long id, String path, LocalDateTime createDate) {
         this.id = id;
-        this.name = name;
+        this.path = path;
         this.createDate = createDate;
     }
 
-    public PictureData(String name) {
-        this.name = name;
+    public PictureData(String path) {
+        this.path = path;
     }
 
-    public PictureData(String name, LocalDateTime createDate) {
-        this.name = name;
+    public PictureData(String path, LocalDateTime createDate) {
+        this.path = path;
         this.createDate = createDate;
+    }
+
+    public PictureData(Long id, String path, LocalDateTime createDate, LocalDateTime updateDate) {
+        this.id = id;
+        this.path = path;
+        this.createDate = createDate;
+        this.updateDate = updateDate;
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getPath() {
+        return path;
     }
 
     public LocalDateTime getCreateDate() {
@@ -55,8 +62,8 @@ public class PictureData {
         return deleteDate;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public void setCreateDate(LocalDateTime createDate) {

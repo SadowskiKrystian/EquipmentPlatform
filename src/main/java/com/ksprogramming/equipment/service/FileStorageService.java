@@ -12,7 +12,7 @@ import java.nio.file.Paths;
 public class FileStorageService implements FileStorageServiceInterface {
     public String saveImageOnServer(MultipartFile file) {
         try {
-            String fileStorageLocation = "./src/main/resources/static/image";
+            String fileStorageLocation = "./src/main/resources/static/img/picture";
             String fileName = file.getOriginalFilename();
             Path path = Paths.get(fileStorageLocation, fileName);
             Files.write(path, file.getBytes());

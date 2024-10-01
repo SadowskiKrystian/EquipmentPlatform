@@ -19,6 +19,7 @@ function getEquipment() {
         contentType: "application/json"
     })
         .done(function (equipment) {
+            fillPicture(equipment);
             prepareValues(equipment);
             fillEquipmentRow(equipment);
             fillAttribute(equipment);
@@ -51,14 +52,22 @@ function saveUpdate(){
     saveValues = [];
 }
 function sendUpdateRequest() {
+    var formData = new FormData;
+    var image = $('input[name="file"]').get(0).files[0];
+    if (image !== null){
+        formData.append('file', image);
+    }
+    formData.append('json', JSON.stringify({
+        id : equipmentId,
+        name : $("#name").val(),
+        values: saveValues
+    }))
     $.ajax({
-        url: "/admin/api/crs/equipment/" + equipmentId,
-        method: "PUT",
-        contentType: "application/json",
-        data:/*prepareData()*/ JSON.stringify({
-            name: $("#name").val(),
-            values: saveValues
-        })
+        url: "/api/crs/equipment",
+        type:"PUT",
+        processData:false,
+        contentType: false,
+        data: formData,
     })
         .done(function () {
             $("#operation-successful-modal").modal('show');
@@ -68,6 +77,24 @@ function sendUpdateRequest() {
             $("#save-changes-button").prop( "disabled", false );
             showError(prepareErrorMessage(jqxhr.responseText));
         })
+
+    // $.ajax({
+    //     url: "/admin/api/crs/equipment/" + equipmentId,
+    //     method: "PUT",
+    //     contentType: "application/json",
+    //     data:/*prepareData()*/ JSON.stringify({
+    //         name: $("#name").val(),
+    //         values: saveValues
+    //     })
+    // })
+    //     .done(function () {
+    //         $("#operation-successful-modal").modal('show');
+    //     })
+    //     .fail(function (jqxhr, textStatus, errorThrown) {
+    //         displayErrorInformation(jqxhr.responseText);
+    //         $("#save-changes-button").prop( "disabled", false );
+    //         showError(prepareErrorMessage(jqxhr.responseText));
+    //     })
 }
 // function prepareData(){
 //     // json = '{';
@@ -133,7 +160,17 @@ function fillRow(value, id){
             "<input type='date' class='form-control' id='attribute-id-" + id + "' value='" + value.value + "'>")
     );
 }
-
+function fillPicture(equipment){
+    if(equipment.equipment.picture.path !== null) {
+        $('#picture').append(
+            "<img src='/img/picture/" + equipment.equipment.picture.path + "' class='img-fluid'>"
+        )
+    }else{
+        $('#picture').append(
+            "<img src='/img/picture/jeden.jpeg' class='img-fluid '>"
+        )
+    }
+}
 
 
 function showError(text) {

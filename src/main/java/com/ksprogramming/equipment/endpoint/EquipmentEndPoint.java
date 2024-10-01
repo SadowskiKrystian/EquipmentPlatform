@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -117,10 +118,34 @@ public class EquipmentEndPoint {
         equipmentService.remove(id);
 
     }
-    @PutMapping("/equipment/{id}")
-    public void updateEquipment(@PathVariable Long id, @RequestBody EquipmentPutRequest request){
-        EquipmentData equipment = new EquipmentData(userService.getLoggedUser(), request.getName(), LocalDateTime.now());
-        equipmentService.update(equipment, valuesPutRequestToData(request.getValues()));
+    @PutMapping("/equipment")
+    public void updateEquipment(@RequestParam(value = "file", required = false) MultipartFile file, @RequestParam("json") String json){
+        String fileName;
+        PictureData picture = null;
+        EquipmentPutRequest equipmentPutRequest;
+        try{
+            ObjectMapper mapper = new ObjectMapper();
+            equipmentPutRequest = mapper.readValue(json, EquipmentPutRequest.class);
+            System.out.println(equipmentPutRequest.getName());
+            equipmentPutRequest.getValues().forEach(value -> System.out.println(value.getValue()));
+            System.out.println();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        if (file != null){
+            if(equipmentService.get(equipmentPutRequest.getId()).getEquipment().getPicture() == null){
+                fileName = fileStorageService.saveImageOnServer(file);
+                picture = pictureService.createPicture(new PictureData(fileName));
+            }else{
+                fileName = fileStorageService.saveImageOnServer(file);
+                PictureData pictureData = equipmentService.get(equipmentPutRequest.getId()).getEquipment().getPicture();
+                pictureData.setPath(fileName);
+                picture = pictureService.updatePicture(pictureData);
+            }
+        }
+        EquipmentData equipment = new EquipmentData(equipmentPutRequest.getId(), userService.getLoggedUser(), picture, equipmentPutRequest.getName(), LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
+        equipmentService.update(equipment, valuesPutRequestToData(equipmentPutRequest.getValues()));
+
     }
     @PostMapping("/equipment")
     public void createEquipment(@RequestParam(value = "file", required = false) MultipartFile file, @RequestParam("json") String json) {
@@ -138,14 +163,10 @@ public class EquipmentEndPoint {
             equipmentPostRequest.getValues().forEach(value -> System.out.println(value.getValue()));
             System.out.println();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+           throw new RuntimeException(e);
         }
         EquipmentData equipment = new EquipmentData(userService.getLoggedUser(), picture, equipmentPostRequest.getName(), LocalDateTime.now());
         equipmentService.create(equipment, valuesPostRequestToData(equipmentPostRequest.getValues()));
-    }
-    @PostMapping("/equipment-copy")
-    public void replaceCreateEquipment(@RequestParam("file")MultipartFile file, @RequestParam("json") String json) {
-
     }
     @GetMapping("/equipments")
     public List<EquipmentGetResponse> findAll(@RequestParam(name = "name", required = false) String name) {
@@ -179,7 +200,7 @@ public class EquipmentEndPoint {
         });
         return list;
     }
-    private static EquipmentWithAttributesGetResponse prepareEquipmentWithAttributesGetResponse(EquipmentData equipmentData, List<AttributeData> assignedAttributesData, List<AttributeData> attributesData) {
+    private EquipmentWithAttributesGetResponse prepareEquipmentWithAttributesGetResponse(EquipmentData equipmentData, List<AttributeData> assignedAttributesData, List<AttributeData> attributesData) {
         List<AttributeGetResponse> assignedAttributes = new ArrayList<>();
         assignedAttributesData.stream()
                 .forEach(attribute -> assignedAttributes.add(new AttributeGetResponse(attribute)));
@@ -188,14 +209,22 @@ public class EquipmentEndPoint {
                 .forEach(attribute -> {
                     attributes.add(new AttributeGetResponse(attribute));
                 });
-        return new EquipmentWithAttributesGetResponse(new EquipmentGetResponse(equipmentData),
+        return new EquipmentWithAttributesGetResponse(new EquipmentGetResponse(equipmentData.getId(), equipmentUserDataToGetResponse(equipmentData.getUserData()),
+                equipmentData.getPicture() != null?pictureDataToGetResponse(equipmentData.getPicture()) : new PictureGetResponse(), equipmentData.getName(), equipmentData.getCreateDate(), equipmentData.getEditDate()),
                 assignedAttributes, attributes);
+
     }
+
+    private PictureGetResponse pictureDataToGetResponse(PictureData picture) {
+        return new PictureGetResponse(picture.getId(), picture.getPath(), picture.getCreateDate(), picture.getUpdateDate());
+    }
+
     private List<EquipmentGetResponse> equipmentsDataToEquipmentsGetResponse(String name) {
         List<EquipmentGetResponse> equipments = new ArrayList<>();
         equipmentService.findByLogin(name).stream()
                 .forEach(equipment -> equipments.add(new EquipmentGetResponse(equipment.getId()
                         , equipmentUserDataToGetResponse(equipment.getUserData())
+                        , equipment.getPicture() != null?pictureDataToGetResponse(equipment.getPicture()):new PictureGetResponse()
                         , equipment.getName()
                         , equipment.getCreateDate()
                         , equipment.getEditDate())));

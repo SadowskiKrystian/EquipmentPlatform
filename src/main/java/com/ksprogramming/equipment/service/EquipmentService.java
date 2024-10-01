@@ -52,6 +52,7 @@ public class EquipmentService implements EquipmentServiceInterface{
 
     public void update(EquipmentData equipmentData, List<ValueData> values) {
         EquipmentData equipment = equipmentEntityToData(equipmentRepository.getReferenceById(equipmentData.getId().intValue()));
+        equipment.setPicture(equipmentData.getPicture());
         equipment.setName(equipmentData.getName());
         equipment.setEditDate(LocalDateTime.now());
         validate(equipment, values);
@@ -115,15 +116,15 @@ public class EquipmentService implements EquipmentServiceInterface{
 
     private Equipment equipmentDataToEntity(EquipmentData equipmentData) {
         Picture picture = null;
-        if (equipmentData.getPictureData() != null) {
-            picture = pictureDataToEntity(equipmentData.getPictureData());
+        if (equipmentData.getPicture() != null) {
+            picture = pictureDataToEntity(equipmentData.getPicture());
         }
         return new Equipment(equipmentData.getId(), equipmentUserDataToEntity(equipmentData.getUserData()), picture,
                 equipmentData.getName(), equipmentData.getCreateDate(), equipmentData.getEditDate(), equipmentData.getRemoveDate());
     }
 
     private Picture pictureDataToEntity(PictureData pictureData) {
-        return new Picture(pictureData.getId(), pictureData.getName(), pictureData.getCreateDate());
+        return new Picture(pictureData.getId(), pictureData.getPath(), pictureData.getCreateDate());
     }
 
     private User equipmentUserDataToEntity(UserData userData){
