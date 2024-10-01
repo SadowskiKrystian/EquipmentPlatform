@@ -72,6 +72,14 @@ function fillCreateResults(attributes){
         "<h6>Attributes:</h6>" +
         "<div id='attributes-record'>" +
         "       </div>" +
+        "</form>" +
+        "<form id='uploadForm' class='text-center'>" +
+        "<div class='form-group'>" +
+        "<label class='form-check-label'>Picture:</label>" +
+        "</div>" +
+        "<div class='form-group'>" +
+        "<input type='file' id='fileInput' name='file' class='form-check-label'>" +
+        "</div>" +
         "</form>"
     );
     saveAttributes = attributes;
@@ -137,19 +145,25 @@ function saveAttributeValue() {
 }
 
 function sendCreateRequest() {
+    var formData = new FormData;
+    var image = $('input[name="file"]').get(0).files[0];
+    if (image !== null){
+        formData.append('file', image);
+    }
+    formData.append('json', JSON.stringify({
+        name : $("#create-name").val(),
+        values: attributeWithValueList
+    }))
     $.ajax({
-        url: "/admin/api/crs/equipment",
-        method: "post",
-        contentType: "application/json",
-        data:
-            JSON.stringify({
-                name: $("#create-name").val(),
-                values: attributeWithValueList
-            })
+        url: "/api/crs/equipment",
+        type:"POST",
+        processData:false,
+        contentType: false,
+        data: formData,
     })
         .done(function () {
-            $("#create-modal").modal('hide');
             $("#operation-successful-modal").modal('show');
+            $('#create-modal').modal('hide');
             findEquipments();
             clearCreateModal();
         })
@@ -157,6 +171,27 @@ function sendCreateRequest() {
             $("#create-button").prop("disabled", false);
             displayErrorInformation(jqxhr.responseText);
         })
+
+    // $.ajax({
+    //     url: "/admin/api/crs/equipment",
+    //     method: "post",
+    //     contentType: "application/json",
+    //     data:
+    //         JSON.stringify({
+    //             name: $("#create-name").val(),
+    //             values: attributeWithValueList
+    //         })
+    // })
+    //     .done(function () {
+    //         $("#create-modal").modal('hide');
+    //         $("#operation-successful-modal").modal('show');
+    //         findEquipments();
+    //         clearCreateModal();
+    //     })
+    //     .fail(function (jqxhr, textStatus, errorThrown) {
+    //         $("#create-button").prop("disabled", false);
+    //         displayErrorInformation(jqxhr.responseText);
+    //     })
 
 }
 function cancel(){

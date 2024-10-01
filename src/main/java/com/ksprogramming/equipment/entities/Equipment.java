@@ -13,6 +13,8 @@ public class Equipment {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+    @OneToOne
+    private Picture picture;
     private String name;
     @Column(name = "create_date")
     private LocalDateTime createDate;
@@ -33,6 +35,7 @@ public class Equipment {
         this.createDate = createDate;
     }
 
+
     public Equipment(EquipmentData equipmentData){
         this.id = equipmentData.getId();
         this.name = equipmentData.getName();
@@ -41,14 +44,22 @@ public class Equipment {
         this.removeDate = equipmentData.getRemoveDate();
     }
 
-    public Equipment(Long id, User user, String name,
+    public Equipment(Long id, User user, Picture picture, String name,
                            LocalDateTime createDate, LocalDateTime editDate, LocalDateTime removeDate) {
         this.id = id;
         this.user = user;
+        this.picture = picture;
         this.name = name;
         this.createDate = createDate;
         this.editDate = editDate;
         this.removeDate = removeDate;
+    }
+
+    public Equipment(User user, Picture picture, String name, LocalDateTime createDate) {
+        this.user = user;
+        this.picture = picture;
+        this.name = name;
+        this.createDate = createDate;
     }
 
     public Long getId() {
@@ -97,5 +108,13 @@ public class Equipment {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Picture getPicture() {
+        return picture;
+    }
+
+    public void setPicture(Picture picture) {
+        this.picture = picture;
     }
 }

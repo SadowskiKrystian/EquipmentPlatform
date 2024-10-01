@@ -26,14 +26,22 @@ function findAttributes() {
 }
 function fillCreateResults(attributes){
     $('#create-record').append(
-        "<form className='text-center'>" +
-        "<div className='form-group'>" +
+        "<form class='text-center'>" +
+        "<div class='form-group'>" +
         "<label class='form-check-label'>Name:</label>" +
         "<input type='text' class='form-control' id='create-name'/>" +
         "</div>" +
         "<h6>Attributes:</h6>" +
         "<div id='attributes-record'>" +
         "       </div>" +
+        "</form>" +
+        "<form id='uploadForm' class='text-center'>" +
+        "<div class='form-group'>" +
+        "<label class='form-check-label'>Picture:</label>" +
+        "</div>" +
+        "<div class='form-group'>" +
+        "<input type='file' id='fileInput' name='file' class='form-check-label'>" +
+        "</div>" +
         "</form>"
     );
     saveAttributes = attributes;
@@ -43,7 +51,7 @@ function fillCreateResults(attributes){
 }
 function fillCreateRow(attribute) {
     $('#attributes-record').append(
-        "<div className='form-group'>" +
+        "<div class='form-group'>" +
         "<label class='form-check-label'>" + attribute.name + "</label>" + (attribute.type !== 'DateTime'?
             "<input type='text' class='form-control' id='attribute-id-" + attribute.id + "'>" :
             "<input type='date' class='form-control' id='attribute-id-" + attribute.id + "'>") +
@@ -60,15 +68,21 @@ function saveAttributeValue() {
 }
 
 function sendCreateRequest() {
+    var formData = new FormData;
+    var image = $('input[name="file"]').get(0).files[0];
+    if (image !== null){
+        formData.append('file', image);
+    }
+    formData.append('json', JSON.stringify({
+        name : $("#create-name").val(),
+        values: attributeWithValueList
+    }))
     $.ajax({
         url: "/api/crs/equipment",
-        method: "post",
-        contentType: "application/json",
-        data:
-            JSON.stringify({
-                name: $("#create-name").val(),
-                values: attributeWithValueList
-            })
+        type:"POST",
+        processData:false,
+        contentType: false,
+        data: formData,
     })
         .done(function () {
             $("#operation-successful-modal").modal('show');
@@ -80,6 +94,7 @@ function sendCreateRequest() {
         })
 
 }
+
 function cancel(){
     window.location.href = '/equipments-front'
     // $("#create-name").val('');
