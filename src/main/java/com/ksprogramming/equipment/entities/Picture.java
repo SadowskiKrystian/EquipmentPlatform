@@ -71,4 +71,45 @@ public class Picture {
     public LocalDateTime getDeleteDate() {
         return deleteDate;
     }
+
+    public static PictureBuilder builder(){
+        return new PictureBuilder();
+    }
+
+    public static class PictureBuilder {
+        private Long id;
+        private String name;
+        private LocalDateTime createDate;
+        private LocalDateTime updateDate;
+        private LocalDateTime deleteDate;
+
+        public PictureBuilder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public PictureBuilder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public PictureBuilder createDate(LocalDateTime createDate) {
+            this.createDate = createDate;
+            return this;
+        }
+
+        public PictureBuilder updateDate(LocalDateTime updateDate) {
+            this.updateDate = updateDate;
+            return this;
+        }
+
+        public PictureBuilder deleteDate(LocalDateTime deleteDate) {
+            this.deleteDate = deleteDate;
+            return this;
+        }
+
+        public Picture build() {
+            return new Picture(id, name, createDate, updateDate, deleteDate);
+        }
+    }
 }

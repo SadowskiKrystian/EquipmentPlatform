@@ -85,6 +85,20 @@ public class User {
         this.deleteDate = deleteDate;
     }
 
+    public User(Long id, String login, String passwordHash, Boolean emailConfirmed, String language, List<UserAuthority> userAuthorities,
+                List<Equipment> equipments, List<Notification> notification, LocalDateTime registrationDate, LocalDateTime deleteDate) {
+        this.id = id;
+        this.login = login;
+        this.passwordHash = passwordHash;
+        this.emailConfirmed = emailConfirmed;
+        this.language = language;
+        this.userAuthorities = userAuthorities;
+        this.equipments = equipments;
+        this.notification = notification;
+        this.registrationDate = registrationDate;
+        this.deleteDate = deleteDate;
+    }
+
     public Long getId() {
         return id;
     }
@@ -121,4 +135,73 @@ public class User {
         return equipments;
     }
 
+    public static UserBuilder builder(){
+        return new UserBuilder();
+    }
+
+    public static class UserBuilder {
+        private Long id;
+        private String login;
+        private String passwordHash;
+        private Boolean emailConfirmed;
+        private String language;
+        private LocalDateTime registrationDate;
+        private LocalDateTime deleteDate;
+        private List<UserAuthority> userAuthorities;
+        private List<Equipment> equipments;
+        private List<Notification> notification;
+
+        public UserBuilder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public UserBuilder login(String login) {
+            this.login = login;
+            return this;
+        }
+
+        public UserBuilder passwordHash(String passwordHash) {
+            this.passwordHash = passwordHash;
+            return this;
+        }
+
+        public UserBuilder emailConfirmed(Boolean emailConfirmed) {
+            this.emailConfirmed = emailConfirmed;
+            return this;
+        }
+
+        public UserBuilder language(String language) {
+            this.language = language;
+            return this;
+        }
+
+        public UserBuilder registrationDate(LocalDateTime registrationDate) {
+            this.registrationDate = registrationDate;
+            return this;
+        }
+
+        public UserBuilder deleteDate(LocalDateTime deleteDate) {
+            this.deleteDate = deleteDate;
+            return this;
+        }
+
+        public UserBuilder userAuthorities(List<UserAuthority> userAuthorities) {
+            this.userAuthorities = userAuthorities;
+            return this;
+        }
+        public UserBuilder equipments(List<Equipment> equipments) {
+            this.equipments = equipments;
+            return this;
+        }
+
+        public UserBuilder notification(List<Notification> notification) {
+            this.notification = notification;
+            return this;
+        }
+
+        public User build() {
+            return new User(id, login, passwordHash, emailConfirmed, language, userAuthorities, equipments, notification, registrationDate, deleteDate);
+        }
+    }
 }
