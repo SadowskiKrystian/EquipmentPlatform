@@ -55,4 +55,57 @@ public class NotificationGetResponse {
     public String getSeenDateTime() {
         return seenDateTime;
     }
+
+    public static NotificationGetResponseBuilder builder(){
+        return new NotificationGetResponseBuilder();
+    }
+
+    public static class NotificationGetResponseBuilder {
+        private Long id;
+        private String senderLogin;
+        private UserGetResponse receiverId;
+        private String title;
+        private String content;
+        private LocalDateTime createDate;
+        private LocalDateTime seenDateTime;
+
+        public NotificationGetResponseBuilder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public NotificationGetResponseBuilder senderLogin(String senderLogin) {
+            this.senderLogin = senderLogin;
+            return this;
+        }
+
+        public NotificationGetResponseBuilder receiverId(UserGetResponse receiverId) {
+            this.receiverId = receiverId;
+            return this;
+        }
+
+        public NotificationGetResponseBuilder title(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public NotificationGetResponseBuilder content(String content) {
+            this.content = content;
+            return this;
+        }
+
+        public NotificationGetResponseBuilder createDate(LocalDateTime createDate) {
+            this.createDate = createDate;
+            return this;
+        }
+
+        public NotificationGetResponseBuilder seenDateTime(LocalDateTime seenDateTime) {
+            this.seenDateTime = seenDateTime;
+            return this;
+        }
+
+        public NotificationGetResponse build() {
+            return new NotificationGetResponse(id, senderLogin, receiverId, title, content, createDate, seenDateTime);
+        }
+    }
 }

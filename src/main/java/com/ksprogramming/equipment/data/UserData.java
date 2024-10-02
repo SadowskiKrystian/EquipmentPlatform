@@ -24,8 +24,20 @@ public class UserData {
         this.registrationDate = registrationDate;
     }
 
+    public UserData(Long id, String login, String passwordHash, Boolean emailConfirmed, String language,
+                    List<UserAuthorityData> userAuthoritiesData, LocalDateTime registrationDate, LocalDateTime deleteDate) {
+        this.id = id;
+        this.login = login;
+        this.passwordHash = passwordHash;
+        this.emailConfirmed = emailConfirmed;
+        this.language = language;
+        this.userAuthoritiesData = userAuthoritiesData;
+        this.registrationDate = registrationDate;
+        this.deleteDate = deleteDate;
+    }
+
     public UserData(Long id, String login, String passwordHash,
-                             Boolean emailConfirmed, String language, LocalDateTime registrationDate) {
+                    Boolean emailConfirmed, String language, LocalDateTime registrationDate) {
         this.id = id;
         this.login = login;
         this.passwordHash = passwordHash;
@@ -139,4 +151,62 @@ public class UserData {
         this.deleteDate = deleteDate;
     }
 
+    public static UserDataBuilder builder(){
+        return new UserDataBuilder();
+    }
+
+    public static class UserDataBuilder {
+        private Long id;
+        private String login;
+        private String passwordHash;
+        private Boolean emailConfirmed;
+        private String language;
+        private List<UserAuthorityData> userAuthoritiesData;
+        private LocalDateTime registrationDate;
+        private LocalDateTime deleteDate;
+
+        public UserDataBuilder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public UserDataBuilder login(String login) {
+            this.login = login;
+            return this;
+        }
+
+        public UserDataBuilder passwordHash(String passwordHash) {
+            this.passwordHash = passwordHash;
+            return this;
+        }
+
+        public UserDataBuilder emailConfirmed(Boolean emailConfirmed) {
+            this.emailConfirmed = emailConfirmed;
+            return this;
+        }
+
+        public UserDataBuilder language(String language) {
+            this.language = language;
+            return this;
+        }
+
+        public UserDataBuilder userAuthoritiesData(List<UserAuthorityData> userAuthoritiesData) {
+            this.userAuthoritiesData = userAuthoritiesData;
+            return this;
+        }
+
+        public UserDataBuilder registrationDate(LocalDateTime registrationDate) {
+            this.registrationDate = registrationDate;
+            return this;
+        }
+
+        public UserDataBuilder deleteDate(LocalDateTime deleteDate) {
+            this.deleteDate = deleteDate;
+            return this;
+        }
+
+        public UserData build() {
+            return new UserData(id, login, passwordHash, emailConfirmed, language, userAuthoritiesData, registrationDate, deleteDate);
+        }
+    }
 }

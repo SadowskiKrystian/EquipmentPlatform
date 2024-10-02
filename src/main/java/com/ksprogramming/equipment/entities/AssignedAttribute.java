@@ -55,6 +55,8 @@ public class AssignedAttribute {
     }
 
 
+
+
     public Long getId() {
         return id;
     }
@@ -119,4 +121,61 @@ public class AssignedAttribute {
         this.attribute = attribute;
     }
 
+    public static AssignedAttributeBuilder builder(){
+        return new AssignedAttributeBuilder();
+    }
+    public static class AssignedAttributeBuilder {
+        private Long id;
+        private String domain;
+        private Long domainId;
+        private Attribute attribute;
+        private String value;
+        private LocalDateTime createDate;
+        private LocalDateTime editDate;
+        private LocalDateTime removeDate;
+
+        public AssignedAttributeBuilder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public AssignedAttributeBuilder domain(String domain) {
+            this.domain = domain;
+            return this;
+        }
+
+        public AssignedAttributeBuilder domainId(Long domainId) {
+            this.domainId = domainId;
+            return this;
+        }
+
+        public AssignedAttributeBuilder attribute(Attribute attribute) {
+            this.attribute = attribute;
+            return this;
+        }
+
+        public AssignedAttributeBuilder value(String value) {
+            this.value = value;
+            return this;
+        }
+
+        public AssignedAttributeBuilder createDate(LocalDateTime createDate) {
+            this.createDate = createDate;
+            return this;
+        }
+
+        public AssignedAttributeBuilder editDate(LocalDateTime editDate) {
+            this.editDate = editDate;
+            return this;
+        }
+
+        public AssignedAttributeBuilder removeDate(LocalDateTime removeDate) {
+            this.removeDate = removeDate;
+            return this;
+        }
+
+        public AssignedAttribute build() {
+            return new AssignedAttribute(id, domain, domainId, attribute, value, createDate, editDate, removeDate);
+        }
+    }
 }

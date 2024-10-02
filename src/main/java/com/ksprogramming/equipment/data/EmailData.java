@@ -26,4 +26,33 @@ public class EmailData {
     public String getText() {
         return text;
     }
+
+    public static EmailDataBuilder builder(){
+        return new EmailDataBuilder();
+    }
+
+    public static class EmailDataBuilder {
+        private String to;
+        private String subject;
+        private String text;
+
+        public EmailDataBuilder setTo(String to) {
+            this.to = to;
+            return this;
+        }
+
+        public EmailDataBuilder setSubject(String subject) {
+            this.subject = subject;
+            return this;
+        }
+
+        public EmailDataBuilder setText(String text) {
+            this.text = text;
+            return this;
+        }
+
+        public EmailData build() {
+            return new EmailData(to, subject, text);
+        }
+    }
 }

@@ -106,4 +106,63 @@ public class Notification {
     public void setDeleteDateTime(LocalDateTime deleteDateTime) {
         this.deleteDateTime = deleteDateTime;
     }
+
+    public static NotificationBuilder builder(){
+        return new NotificationBuilder();
+    }
+
+    public static class NotificationBuilder {
+        private Long id;
+        private String senderLogin;
+        private User receiver;
+        private String title;
+        private String content;
+        private LocalDateTime createDateTime;
+        private LocalDateTime seenDateTime;
+        private LocalDateTime deleteDateTime;
+
+        public NotificationBuilder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public NotificationBuilder senderLogin(String senderLogin) {
+            this.senderLogin = senderLogin;
+            return this;
+        }
+
+        public NotificationBuilder receiver(User receiver) {
+            this.receiver = receiver;
+            return this;
+        }
+
+        public NotificationBuilder title(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public NotificationBuilder content(String content) {
+            this.content = content;
+            return this;
+        }
+
+        public NotificationBuilder createDateTime(LocalDateTime createDateTime) {
+            this.createDateTime = createDateTime;
+            return this;
+        }
+
+        public NotificationBuilder seenDateTime(LocalDateTime seenDateTime) {
+            this.seenDateTime = seenDateTime;
+            return this;
+        }
+
+        public NotificationBuilder deleteDateTime(LocalDateTime deleteDateTime) {
+            this.deleteDateTime = deleteDateTime;
+            return this;
+        }
+
+        public Notification build() {
+            return new Notification(id, senderLogin, receiver, title, content, createDateTime, seenDateTime, deleteDateTime);
+        }
+    }
 }

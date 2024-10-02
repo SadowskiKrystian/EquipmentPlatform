@@ -39,6 +39,18 @@ public class Attribute {
         this.removeDate = attributeData.getRemoveDate();
     }
 
+    public Attribute(Long id, String name, String type, String domain,
+                     List<AssignedAttribute> assignedAttributes, LocalDateTime createDate, LocalDateTime editDate, LocalDateTime removeDate) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.domain = domain;
+        this.assignedAttributes = assignedAttributes;
+        this.createDate = createDate;
+        this.editDate = editDate;
+        this.removeDate = removeDate;
+    }
+
     public Long getId() {
         return id;
     }
@@ -101,5 +113,64 @@ public class Attribute {
 
     public void setAssignedAttributes(List<AssignedAttribute> assignedAttributes) {
         this.assignedAttributes = assignedAttributes;
+    }
+
+    public static AttributeBuilder builder(){
+        return new AttributeBuilder();
+    }
+
+    public static class AttributeBuilder{
+        private Long id;
+        private String name;
+        private String type;
+        private String domain;
+        private List<AssignedAttribute> assignedAttributes;
+        private LocalDateTime createDate;
+        private LocalDateTime editDate;
+        private LocalDateTime removeDate;
+
+        public AttributeBuilder id(Long id){
+            this.id = id;
+            return this;
+        }
+
+        public AttributeBuilder name(String name){
+            this.name = name;
+            return this;
+        }
+
+        public AttributeBuilder type(String type){
+            this.type = type;
+            return this;
+        }
+
+        public AttributeBuilder domain(String domain) {
+            this.domain = domain;
+            return this;
+        }
+
+        public AttributeBuilder assignedAttributes(List<AssignedAttribute> assignedAttributes){
+            this.assignedAttributes = assignedAttributes;
+            return this;
+        }
+
+        public AttributeBuilder createDate(LocalDateTime createDate){
+            this.createDate = createDate;
+            return this;
+        }
+
+        public AttributeBuilder editDate(LocalDateTime editDate){
+            this.editDate = editDate;
+            return this;
+        }
+
+        public AttributeBuilder removeDate(LocalDateTime removeDate){
+            this.removeDate = removeDate;
+            return this;
+        }
+
+        public Attribute build(){
+            return new Attribute(id, name, type, domain, assignedAttributes, createDate, editDate, removeDate);
+        }
     }
 }

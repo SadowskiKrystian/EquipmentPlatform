@@ -20,4 +20,27 @@ public class AttributesWithDetailsGetResponse {
     public AttributeType[] getDictionary() {
         return dictionary;
     }
+
+    public static AttributesWithDetailsGetResponseBuilder builder(){
+        return new AttributesWithDetailsGetResponseBuilder();
+    }
+
+    public static class AttributesWithDetailsGetResponseBuilder {
+        private List<AttributeGetResponse> attributes;
+        private AttributeType[] dictionary;
+
+        public AttributesWithDetailsGetResponseBuilder withAttributes(List<AttributeGetResponse> attributes) {
+            this.attributes = attributes;
+            return this;
+        }
+
+        public AttributesWithDetailsGetResponseBuilder withDictionary(AttributeType[] dictionary) {
+            this.dictionary = dictionary;
+            return this;
+        }
+
+        public AttributesWithDetailsGetResponse build() {
+            return new AttributesWithDetailsGetResponse(attributes, dictionary);
+        }
+    }
 }

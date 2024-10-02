@@ -117,4 +117,58 @@ public class Equipment {
     public void setPicture(Picture picture) {
         this.picture = picture;
     }
+
+    public static EquipmentBuilder builder(){
+        return new EquipmentBuilder();
+    }
+
+    public static class EquipmentBuilder{
+        private Long id;
+        private User user;
+        private Picture picture;
+        private String name;
+        private LocalDateTime createDate;
+        private LocalDateTime editDate;
+        private LocalDateTime removeDate;
+
+        public EquipmentBuilder id(Long id){
+            this.id = id;
+            return this;
+        }
+
+        public EquipmentBuilder user(User user){
+            this.user = user;
+            return this;
+        }
+
+        public EquipmentBuilder picture(Picture picture){
+            this.picture = picture;
+            return this;
+        }
+
+        public EquipmentBuilder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public EquipmentBuilder createDate(LocalDateTime createDate){
+            this.createDate = createDate;
+            return this;
+        }
+
+        public EquipmentBuilder editDate(LocalDateTime editDate){
+            this.editDate = editDate;
+            return this;
+        }
+
+        public EquipmentBuilder removeDate(LocalDateTime removeDate){
+            this.removeDate = removeDate;
+            return this;
+        }
+
+        public Equipment build(){
+            return new Equipment(id, user, picture, name, createDate, editDate, removeDate);
+        }
+    }
+
 }

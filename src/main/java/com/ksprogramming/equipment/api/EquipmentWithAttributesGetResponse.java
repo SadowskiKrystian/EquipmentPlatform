@@ -23,4 +23,33 @@ public class EquipmentWithAttributesGetResponse {
     public List<AttributeGetResponse> getAttributes() {
         return attributes;
     }
+
+    public static EquipmentWithAttributesGetResponseBuilder builder(){
+        return new EquipmentWithAttributesGetResponseBuilder();
+    }
+
+    public static class EquipmentWithAttributesGetResponseBuilder {
+        private EquipmentGetResponse equipment;
+        private List<AttributeGetResponse> assignedAttributes;
+        private List<AttributeGetResponse> attributes;
+
+        public EquipmentWithAttributesGetResponseBuilder withEquipment(EquipmentGetResponse equipment) {
+            this.equipment = equipment;
+            return this;
+        }
+
+        public EquipmentWithAttributesGetResponseBuilder withAssignedAttributes(List<AttributeGetResponse> assignedAttributes) {
+            this.assignedAttributes = assignedAttributes;
+            return this;
+        }
+
+        public EquipmentWithAttributesGetResponseBuilder withAttributes(List<AttributeGetResponse> attributes) {
+            this.attributes = attributes;
+            return this;
+        }
+
+        public EquipmentWithAttributesGetResponse build() {
+            return new EquipmentWithAttributesGetResponse(equipment, assignedAttributes, attributes);
+        }
+    }
 }

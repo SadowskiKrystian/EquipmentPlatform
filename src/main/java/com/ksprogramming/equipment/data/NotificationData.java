@@ -92,4 +92,63 @@ public class NotificationData {
     public void setDeleteDateTime(LocalDateTime deleteDateTime) {
         this.deleteDateTime = deleteDateTime;
     }
+
+    public static NotificationDataBuilder builder(){
+        return new NotificationDataBuilder();
+    }
+
+    public static class NotificationDataBuilder {
+        private Long id;
+        private String senderLogin;
+        private UserData receiverId;
+        private String title;
+        private String content;
+        private LocalDateTime createDateTime;
+        private LocalDateTime seenDateTime;
+        private LocalDateTime deleteDateTime;
+
+        public NotificationDataBuilder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public NotificationDataBuilder senderLogin(String senderLogin) {
+            this.senderLogin = senderLogin;
+            return this;
+        }
+
+        public NotificationDataBuilder receiverId(UserData receiverId) {
+            this.receiverId = receiverId;
+            return this;
+        }
+
+        public NotificationDataBuilder title(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public NotificationDataBuilder content(String content) {
+            this.content = content;
+            return this;
+        }
+
+        public NotificationDataBuilder createDateTime(LocalDateTime createDateTime) {
+            this.createDateTime = createDateTime;
+            return this;
+        }
+
+        public NotificationDataBuilder seenDateTime(LocalDateTime seenDateTime) {
+            this.seenDateTime = seenDateTime;
+            return this;
+        }
+
+        public NotificationDataBuilder deleteDateTime(LocalDateTime deleteDateTime) {
+            this.deleteDateTime = deleteDateTime;
+            return this;
+        }
+
+        public NotificationData build() {
+            return new NotificationData(id, senderLogin, receiverId, title, content, createDateTime, seenDateTime, deleteDateTime);
+        }
+    }
 }

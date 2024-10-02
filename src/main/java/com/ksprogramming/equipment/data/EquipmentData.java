@@ -12,6 +12,7 @@ public class EquipmentData {
     private LocalDateTime removeDate;
 
 
+
     private EquipmentData(Long id, UserData userData, PictureData picture, String name, LocalDateTime createDate, LocalDateTime editDate, LocalDateTime removeDate) {
         this.id = id;
         this.userData = userData;
