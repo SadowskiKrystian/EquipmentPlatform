@@ -47,4 +47,33 @@ public class UserAuthorityData {
         this.authority = authority;
     }
 
+    public static UserAuthorityDataBuilder builder(){
+        return new UserAuthorityDataBuilder();
+    }
+
+    public static class UserAuthorityDataBuilder {
+        private Long id;
+        private UserData userData;
+        private String authority;
+
+        public UserAuthorityDataBuilder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public UserAuthorityDataBuilder userData(UserData userData) {
+            this.userData = userData;
+            return this;
+        }
+
+        public UserAuthorityDataBuilder authority(String authority) {
+            this.authority = authority;
+            return this;
+        }
+
+        public UserAuthorityData build() {
+            return new UserAuthorityData(id, userData, authority);
+        }
+    }
+
 }

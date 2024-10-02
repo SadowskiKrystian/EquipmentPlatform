@@ -12,14 +12,10 @@ public class AssignedAttributeGetResponse {
     private Long domainId;
     private Long attributeId;
     private String type;
-
     private String createDate;
-
     private String editDate;
-
     private String removeDate;
     private Long valueId;
-
     private String value;
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 

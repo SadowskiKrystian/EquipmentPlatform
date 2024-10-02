@@ -94,6 +94,22 @@ public class AttributeData {
         this.createDate = createDate;
     }
 
+    public AttributeData(Long id, String name, String type, String domain,
+                         List<AssignedAttributeData> assignedAttributesData, LocalDateTime createDate,
+                         LocalDateTime editDate, LocalDateTime removeDate, Long valueId, String value, Long assignedAttributeId) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.domain = domain;
+        this.assignedAttributesData = assignedAttributesData;
+        this.createDate = createDate;
+        this.editDate = editDate;
+        this.removeDate = removeDate;
+        this.valueId = valueId;
+        this.value = value;
+        this.assignedAttributeId = assignedAttributeId;
+    }
+
     public Long getId() {
         return id;
     }
@@ -182,4 +198,80 @@ public class AttributeData {
         this.assignedAttributeId = assignedAttributeId;
     }
 
+    public static AttributeDataBuilder builder(){
+        return new AttributeDataBuilder();
+    }
+
+    public static class AttributeDataBuilder {
+        private Long id;
+        private String name;
+        private String type;
+        private String domain;
+        private List<AssignedAttributeData> assignedAttributesData;
+        private LocalDateTime createDate;
+        private LocalDateTime editDate;
+        private LocalDateTime removeDate;
+        private Long valueId;
+        private String value;
+        private Long assignedAttributeId;
+
+        public AttributeDataBuilder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public AttributeDataBuilder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public AttributeDataBuilder type(String type) {
+            this.type = type;
+            return this;
+        }
+
+        public AttributeDataBuilder domain(String domain) {
+            this.domain = domain;
+            return this;
+        }
+
+        public AttributeDataBuilder assignedAttributesData(List<AssignedAttributeData> assignedAttributesData) {
+            this.assignedAttributesData = assignedAttributesData;
+            return this;
+        }
+
+        public AttributeDataBuilder createDate(LocalDateTime createDate) {
+            this.createDate = createDate;
+            return this;
+        }
+
+        public AttributeDataBuilder editDate(LocalDateTime editDate) {
+            this.editDate = editDate;
+            return this;
+        }
+
+        public AttributeDataBuilder removeDate(LocalDateTime removeDate) {
+            this.removeDate = removeDate;
+            return this;
+        }
+
+        public AttributeDataBuilder valueId(Long valueId) {
+            this.valueId = valueId;
+            return this;
+        }
+
+        public AttributeDataBuilder value(String value) {
+            this.value = value;
+            return this;
+        }
+
+        public AttributeDataBuilder assignedAttributeId(Long assignedAttributeId) {
+            this.assignedAttributeId = assignedAttributeId;
+            return this;
+        }
+
+        public AttributeData build() {
+            return new AttributeData(id, name, type, domain, assignedAttributesData, createDate, editDate, removeDate, valueId, value, assignedAttributeId);
+        }
+    }
 }

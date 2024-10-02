@@ -56,4 +56,45 @@ public class TokenData {
     public void setExpirationDatetime(LocalDateTime expirationDatetime) {
         this.expirationDatetime = expirationDatetime;
     }
+
+    public static TokenDataBuilder builder(){
+        return new TokenDataBuilder();
+    }
+
+    public static class TokenDataBuilder {
+        private Long id;
+        private UserData userData;
+        private String value;
+        private Boolean isUsed;
+        private LocalDateTime expirationDatetime;
+
+        public TokenDataBuilder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public TokenDataBuilder userData(UserData userData) {
+            this.userData = userData;
+            return this;
+        }
+
+        public TokenDataBuilder value(String value) {
+            this.value = value;
+            return this;
+        }
+
+        public TokenDataBuilder isUsed(Boolean isUsed) {
+            this.isUsed = isUsed;
+            return this;
+        }
+
+        public TokenDataBuilder expirationDatetime(LocalDateTime expirationDatetime) {
+            this.expirationDatetime = expirationDatetime;
+            return this;
+        }
+
+        public TokenData build() {
+            return new TokenData(id, userData, value, isUsed, expirationDatetime);
+        }
+    }
 }

@@ -19,4 +19,27 @@ public class EquipmentsWithDetailsData {
         return attributes;
     }
 
+    public static EquipmentWithDetailsDataBuilder builder(){
+        return  new EquipmentWithDetailsDataBuilder();
+    }
+
+    public static class EquipmentWithDetailsDataBuilder {
+        private EquipmentData equipment;
+        private List<AttributeData> attributes;
+
+        public EquipmentWithDetailsDataBuilder equipment(EquipmentData equipment) {
+            this.equipment = equipment;
+            return this;
+        }
+
+        public EquipmentWithDetailsDataBuilder attributes(List<AttributeData> attributes) {
+            this.attributes = attributes;
+            return this;
+        }
+
+        public EquipmentsWithDetailsData build() {
+            return new EquipmentsWithDetailsData(equipment, attributes);
+        }
+    }
+
 }

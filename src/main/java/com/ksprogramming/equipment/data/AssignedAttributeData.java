@@ -59,6 +59,8 @@ public class AssignedAttributeData {
         this.removeDate = removeDate;
     }
 
+
+
     public Long getId() {
         return id;
     }
@@ -121,6 +123,65 @@ public class AssignedAttributeData {
 
     public void setAttribute(AttributeData attribute) {
         this.attributeData = attribute;
+    }
+
+    public static AssignedAttributeDataBuilder builder(){
+        return new AssignedAttributeDataBuilder();
+    }
+
+    public static class AssignedAttributeDataBuilder {
+        private Long id;
+        private String domain;
+        private Long domainId;
+        private AttributeData attributeData;
+        private String value;
+        private LocalDateTime createDate;
+        private LocalDateTime editDate;
+        private LocalDateTime removeDate;
+
+        public AssignedAttributeDataBuilder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public AssignedAttributeDataBuilder domain(String domain) {
+            this.domain = domain;
+            return this;
+        }
+
+        public AssignedAttributeDataBuilder domainId(Long domainId) {
+            this.domainId = domainId;
+            return this;
+        }
+
+        public AssignedAttributeDataBuilder attributeData(AttributeData attributeData) {
+            this.attributeData = attributeData;
+            return this;
+        }
+
+        public AssignedAttributeDataBuilder value(String value) {
+            this.value = value;
+            return this;
+        }
+
+        public AssignedAttributeDataBuilder createDate(LocalDateTime createDate) {
+            this.createDate = createDate;
+            return this;
+        }
+
+        public AssignedAttributeDataBuilder editDate(LocalDateTime editDate) {
+            this.editDate = editDate;
+            return this;
+        }
+
+        public AssignedAttributeDataBuilder removeDate(LocalDateTime removeDate) {
+            this.removeDate = removeDate;
+            return this;
+        }
+
+        public AssignedAttributeData build() {
+            return new AssignedAttributeData(id, domain, domainId, attributeData, value, createDate, editDate, removeDate);
+        }
     }
 
 }
