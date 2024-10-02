@@ -7,39 +7,12 @@ import java.time.format.DateTimeFormatter;
 
 public class AssignedAttributeGetResponse {
     private Long id;
-    private String name;
     private String domain;
     private Long domainId;
     private Long attributeId;
-    private String type;
-    private String createDate;
-    private String editDate;
-    private String removeDate;
-    private Long valueId;
     private String value;
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public AssignedAttributeGetResponse(Long id, String name, String type, LocalDateTime createDate, LocalDateTime editDate, LocalDateTime removeDate, Long valueId, String value) {
-        this.id = id;
-        this.name = name;
-        this.type = type;
-        this.createDate = createDate.format(FORMATTER);
-        this.editDate = editDate != null ? editDate.format(FORMATTER) : null;
-        this.removeDate = removeDate != null ? removeDate.format(FORMATTER) : null;
-        this.valueId = valueId;
-        this.value = value;
-    }
-
-    public AssignedAttributeGetResponse(AttributeData attributeData) {
-        this.id = attributeData.getId();
-        this.name = attributeData.getName();
-        this.type = attributeData.getType();
-        this.createDate = attributeData.getCreateDate() != null ? attributeData.getCreateDate().format(FORMATTER) : null;
-        this.editDate = attributeData.getEditDate() != null ? attributeData.getEditDate().format(FORMATTER) : null;
-        this.removeDate = attributeData.getRemoveDate() != null ? attributeData.getRemoveDate().format(FORMATTER) : null;
-        this.valueId = attributeData.getValueId();
-        this.value = attributeData.getValue();
-    }
 
     public AssignedAttributeGetResponse(AssignedAttributeData assignedAttributeData){
         this.id = assignedAttributeData.getId();
@@ -49,13 +22,16 @@ public class AssignedAttributeGetResponse {
         this.value = assignedAttributeData.getValue();
     }
 
+    public AssignedAttributeGetResponse(Long id, String domain, Long domainId, Long attributeId, String value) {
+        this.id = id;
+        this.domain = domain;
+        this.domainId = domainId;
+        this.attributeId = attributeId;
+        this.value = value;
+    }
 
     public Long getId() {
         return id;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public String getDomain() {
@@ -66,26 +42,6 @@ public class AssignedAttributeGetResponse {
         return domainId;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public String getCreateDate() {
-        return createDate;
-    }
-
-    public String getEditDate() {
-        return editDate;
-    }
-
-    public String getRemoveDate() {
-        return removeDate;
-    }
-
-    public Long getValueId() {
-        return valueId;
-    }
-
     public String getValue() {
         return value;
     }
@@ -93,5 +49,47 @@ public class AssignedAttributeGetResponse {
     public Long getAttributeId() {
         return attributeId;
     }
+
+    public static AssignedAttributeGetResponseBuilder builder(){
+        return new AssignedAttributeGetResponseBuilder();
+    }
+
+    public static class AssignedAttributeGetResponseBuilder {
+        private Long id;
+        private String domain;
+        private Long domainId;
+        private Long attributeId;
+        private String value;
+
+        public AssignedAttributeGetResponseBuilder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public AssignedAttributeGetResponseBuilder domain(String domain) {
+            this.domain = domain;
+            return this;
+        }
+
+        public AssignedAttributeGetResponseBuilder domainId(Long domainId) {
+            this.domainId = domainId;
+            return this;
+        }
+
+        public AssignedAttributeGetResponseBuilder attributeId(Long attributeId) {
+            this.attributeId = attributeId;
+            return this;
+        }
+
+        public AssignedAttributeGetResponseBuilder value(String value) {
+            this.value = value;
+            return this;
+        }
+
+        public AssignedAttributeGetResponse build() {
+            return new AssignedAttributeGetResponse(id, domain, domainId, attributeId, value);
+        }
+    }
+
 }
 

@@ -49,4 +49,52 @@ public class UserGetResponse {
     public String getRegistrationDate() {
         return registrationDate;
     }
+
+    public static UserGetResponseBuilder builder(){
+        return new UserGetResponseBuilder();
+    }
+
+    public static class UserGetResponseBuilder {
+        private Long id;
+        private String login;
+        private String passwordHash;
+        private Boolean emailConfirmed;
+        private String language;
+        private LocalDateTime registrationDate;
+
+        public UserGetResponseBuilder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public UserGetResponseBuilder login(String login) {
+            this.login = login;
+            return this;
+        }
+
+        public UserGetResponseBuilder passwordHash(String passwordHash) {
+            this.passwordHash = passwordHash;
+            return this;
+        }
+
+        public UserGetResponseBuilder emailConfirmed(Boolean emailConfirmed) {
+            this.emailConfirmed = emailConfirmed;
+            return this;
+        }
+
+        public UserGetResponseBuilder language(String language) {
+            this.language = language;
+            return this;
+        }
+
+        public UserGetResponseBuilder registrationDate(LocalDateTime registrationDate) {
+            this.registrationDate = registrationDate;
+            return this;
+        }
+
+        public UserGetResponse build() {
+            return new UserGetResponse(id, login, passwordHash, emailConfirmed, language, registrationDate);
+        }
+    }
+
 }
