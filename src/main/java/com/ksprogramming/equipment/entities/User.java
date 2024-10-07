@@ -135,6 +135,11 @@ public class User {
         return equipments;
     }
 
+    public List<Notification> getNotification() {
+        return notification;
+    }
+
+
     public static UserBuilder builder(){
         return new UserBuilder();
     }

@@ -1,5 +1,8 @@
 package com.ksprogramming.equipment.data;
 
+import com.ksprogramming.equipment.entities.Equipment;
+import com.ksprogramming.equipment.entities.Notification;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -10,6 +13,8 @@ public class UserData {
     private Boolean emailConfirmed;
     private String language;
     private List<UserAuthorityData> userAuthoritiesData;
+    private List<EquipmentData> equipments;
+    private List<NotificationData> notification;
     private LocalDateTime registrationDate;
     private LocalDateTime deleteDate;
 
@@ -44,6 +49,20 @@ public class UserData {
         this.emailConfirmed = emailConfirmed;
         this.language = language;
         this.registrationDate = registrationDate;
+    }
+
+    public UserData(Long id, String login, String passwordHash, Boolean emailConfirmed, String language, List<UserAuthorityData> userAuthoritiesData,
+                    List<EquipmentData> equipments, List<NotificationData> notification, LocalDateTime registrationDate, LocalDateTime deleteDate) {
+        this.id = id;
+        this.login = login;
+        this.passwordHash = passwordHash;
+        this.emailConfirmed = emailConfirmed;
+        this.language = language;
+        this.userAuthoritiesData = userAuthoritiesData;
+        this.equipments = equipments;
+        this.notification = notification;
+        this.registrationDate = registrationDate;
+        this.deleteDate = deleteDate;
     }
 
     public UserData(Long id, String login, String passwordHash, Boolean emailConfirmed, String language, LocalDateTime registrationDate, LocalDateTime deleteDate) {
@@ -143,6 +162,14 @@ public class UserData {
         this.userAuthoritiesData = userAuthoritiesData;
     }
 
+    public List<EquipmentData> getEquipments() {
+        return equipments;
+    }
+
+    public List<NotificationData> getNotification() {
+        return notification;
+    }
+
     public LocalDateTime getDeleteDate() {
         return deleteDate;
     }
@@ -162,6 +189,8 @@ public class UserData {
         private Boolean emailConfirmed;
         private String language;
         private List<UserAuthorityData> userAuthoritiesData;
+        private List<EquipmentData> equipments;
+        private List<NotificationData> notification;
         private LocalDateTime registrationDate;
         private LocalDateTime deleteDate;
 
@@ -195,6 +224,16 @@ public class UserData {
             return this;
         }
 
+        public UserDataBuilder equipments(List<EquipmentData> equipments) {
+            this.equipments = equipments;
+            return this;
+        }
+
+        public UserDataBuilder notification(List<NotificationData> notification) {
+            this.notification = notification;
+            return this;
+        }
+
         public UserDataBuilder registrationDate(LocalDateTime registrationDate) {
             this.registrationDate = registrationDate;
             return this;
@@ -206,7 +245,7 @@ public class UserData {
         }
 
         public UserData build() {
-            return new UserData(id, login, passwordHash, emailConfirmed, language, userAuthoritiesData, registrationDate, deleteDate);
+            return new UserData(id, login, passwordHash, emailConfirmed, language, userAuthoritiesData, equipments, notification, registrationDate, deleteDate);
         }
     }
 }
