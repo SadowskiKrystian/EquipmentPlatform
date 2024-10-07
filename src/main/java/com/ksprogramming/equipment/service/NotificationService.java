@@ -4,6 +4,7 @@ import com.ksprogramming.equipment.data.NotificationData;
 import com.ksprogramming.equipment.data.UserData;
 import com.ksprogramming.equipment.entities.Notification;
 import com.ksprogramming.equipment.entities.User;
+import com.ksprogramming.equipment.mapper.NotificationMapper;
 import com.ksprogramming.equipment.repository.NotificationRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,11 +26,11 @@ public class NotificationService implements NotificationServiceInterface{
     }
     public List<NotificationData> findNotificationsByReceiverId(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return notificationsEntityToData(notificationRepository.findAllByReceiverLogin(authentication.getName()));
+        return NotificationMapper.entityToDataList(notificationRepository.findAllByReceiverLogin(authentication.getName()));
 
     }
     public List<NotificationData> findAllNotifications(){
-        return notificationsEntityToData(notificationRepository.findAll());
+        return NotificationMapper.entityToDataList(notificationRepository.findAll());
     }
     public Long countUnseenNotifications(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -53,36 +54,6 @@ public class NotificationService implements NotificationServiceInterface{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         notificationData.setSenderLogin(authentication.getName());
         notificationData.setCreateDateTime(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
-        return notificationEntityToData(notificationRepository.save(notificationDataToEntity(notificationData)));
-    }
-
-    private List<NotificationData> notificationsEntityToData(List<Notification> notifications) {
-        List<NotificationData> notificationList = new ArrayList<>();
-        notifications.forEach(notification -> {
-            notificationList.add(new NotificationData(notification.getId(), notification.getSenderLogin(), userEntityToData(notification.getReceiver()),
-                    notification.getTitle(), notification.getContent(), notification.getCreateDateTime(), notification.getSeenDateTime(),
-                    notification.getDeleteDateTime()));
-        });
-        return notificationList;
-    }
-
-    private NotificationData notificationEntityToData(Notification notification) {
-        return new NotificationData(notification.getId(), notification.getSenderLogin(), userEntityToData(notification.getReceiver()),
-                notification.getTitle(), notification.getContent(), notification.getCreateDateTime(), notification.getSeenDateTime(),
-                notification.getDeleteDateTime());
-    }
-    private UserData userEntityToData(User user) {
-        return new UserData(user.getId(), user.getLogin(), user.getPasswordHash(),
-                user.getEmailConfirmed(), user.getLanguage(), user.getRegistrationDate());
-    }
-
-    private Notification notificationDataToEntity(NotificationData notificationData) {
-        return new Notification(notificationData.getId(), notificationData.getSenderLogin(), userDataToEntity(notificationData.getReceiverId()),
-                notificationData.getTitle(), notificationData.getContent(), notificationData.getCreateDateTime(), notificationData.getSeenDateTime(),
-                notificationData.getDeleteDateTime());
-    }
-    private User userDataToEntity(UserData user) {
-        return new User(user.getId(), user.getLogin(), user.getPasswordHash(),
-                user.getEmailConfirmed(), user.getLanguage(), user.getRegistrationDate());
+        return NotificationMapper.entityToData(notificationRepository.save(NotificationMapper.dataToEntity(notificationData)));
     }
 }

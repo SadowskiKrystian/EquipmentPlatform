@@ -2,14 +2,13 @@ package com.ksprogramming.equipment.service;
 
 import com.ksprogramming.equipment.data.UserAuthorityData;
 import com.ksprogramming.equipment.data.UserData;
-import com.ksprogramming.equipment.enumes.Authority;
-import com.ksprogramming.equipment.entities.User;
 import com.ksprogramming.equipment.entities.UserAuthority;
+import com.ksprogramming.equipment.enumes.Authority;
+import com.ksprogramming.equipment.mapper.UserAuthorityMapper;
 import com.ksprogramming.equipment.repository.UserAuthorityRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,22 +22,22 @@ public class UserAuthorityService implements UserAuthorityServiceInterface{
     }
 
     public UserAuthorityData save(UserAuthorityData userAuthorityData){
-        UserAuthorityData userAuthority = userAuthorityEntityToData(userAuthorityRepository.save(userAuthorityDataToEntity(userAuthorityData)));
+        UserAuthorityData userAuthority = UserAuthorityMapper.entityToData(userAuthorityRepository.save(UserAuthorityMapper.dataToEntity(userAuthorityData)));
         return userAuthority;
     }
     public void update(UserAuthorityData userAuthorityData){
-        userAuthorityEntityToData(userAuthorityRepository.save(userAuthorityDataToEntity(userAuthorityData)));
+        UserAuthorityMapper.entityToData(userAuthorityRepository.save(UserAuthorityMapper.dataToEntity(userAuthorityData)));
     }
     public UserAuthorityData get(Long id){
-        return userAuthorityEntityToData(userAuthorityRepository.getReferenceById(id.intValue()));
+        return UserAuthorityMapper.entityToData(userAuthorityRepository.getReferenceById(id.intValue()));
     }
 
     public List<UserAuthorityData> findAll(){
-        List<UserAuthorityData> list = userAuthoritiesEntityToData(userAuthorityRepository.findAll());
+        List<UserAuthorityData> list = UserAuthorityMapper.entityToDataList(userAuthorityRepository.findAll());
         return list;
     }
     public List<UserAuthorityData> findById(Long id){
-        List<UserAuthorityData> userAuthorities= userAuthoritiesEntityToData(userAuthorityRepository.findByUserId(id));
+        List<UserAuthorityData> userAuthorities= UserAuthorityMapper.entityToDataList(userAuthorityRepository.findByUserId(id));
         return  userAuthorities;
     }
     public void delete(Long id){
@@ -52,34 +51,4 @@ public class UserAuthorityService implements UserAuthorityServiceInterface{
             return false;
         }
     }
-    private UserAuthority userAuthorityDataToEntity(UserAuthorityData userAuthorityData) {
-        return new UserAuthority(userAuthorityData.getId(), userDataToEntity(userAuthorityData.getUserData()), userAuthorityData.getAuthority());
-    }
-    private UserAuthorityData userAuthorityEntityToData(UserAuthority userAuthorityEntity) {
-        return new UserAuthorityData(userAuthorityEntity.getId(), userEntityToData(userAuthorityEntity.getUser()),
-                userAuthorityEntity.getAuthority());
-    }
-
-    private User userDataToEntity(UserData userData) {
-        return new User(userData.getId(), userData.getLogin(), userData.getPasswordHash(),
-                userData.getEmailConfirmed(), userData.getLanguage(), userData.getRegistrationDate());
-    }
-
-    private List<UserAuthorityData> userAuthoritiesEntityToData(List<UserAuthority> userAuthorityEntities) {
-        List<UserAuthorityData> list = new ArrayList<>();
-        userAuthorityEntities.stream()
-                .forEach(authority -> {
-                    list.add(new UserAuthorityData(authority.getId(), userEntityToData(authority.getUser()),
-                            authority.getAuthority()));
-                });
-        return list;
-    }
-
-    private UserData userEntityToData(User user) {
-        UserData userData = new UserData(user.getId(), user.getLogin(),
-                user.getPasswordHash(), user.getEmailConfirmed(), user.getLanguage(),
-                user.getRegistrationDate());
-        return userData;
-    }
-
 }
