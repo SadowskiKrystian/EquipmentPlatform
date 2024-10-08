@@ -1,8 +1,12 @@
 package com.ksprogramming.equipment.mapper;
 
+import com.ksprogramming.equipment.api.AttributeGetResponse;
+import com.ksprogramming.equipment.api.AttributePostRequest;
 import com.ksprogramming.equipment.data.AttributeData;
 import com.ksprogramming.equipment.entities.Attribute;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,5 +48,27 @@ public class AttributeMapper {
         List<Attribute> attributes = new ArrayList<>();
         attributeDataList.forEach(attributeData -> attributes.add(dataToEntity(attributeData)));
         return attributes;
+    }
+
+    public static AttributeData postRequestToData(AttributePostRequest attributePostRequest) {
+        return AttributeData.builder()
+                .name(attributePostRequest.getName())
+                .type(attributePostRequest.getType())
+                .domain(attributePostRequest.getDomain())
+                .createDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS))
+                .build();
+    }
+
+    public static List<AttributeGetResponse> dataToGetResponseList(List<AttributeData> attributesData) {
+        List<AttributeGetResponse> attributes = new ArrayList<>();
+        attributesData.stream()
+                .forEach(attribute -> {
+                    attributes.add(new AttributeGetResponse(attribute));
+                });
+        return attributes;
+    }
+
+    public static AttributeGetResponse dataToResponse(AttributeData attribute) {
+        return new AttributeGetResponse(attribute);
     }
 }

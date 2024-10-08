@@ -2,10 +2,11 @@ package com.ksprogramming.equipment.service;
 
 import com.ksprogramming.equipment.data.AssignedAttributeData;
 import com.ksprogramming.equipment.data.AttributeData;
-import com.ksprogramming.equipment.entities.AssignedAttribute;
 import com.ksprogramming.equipment.entities.Attribute;
 import com.ksprogramming.equipment.enumes.AttributeType;
 import com.ksprogramming.equipment.enumes.DomainType;
+import com.ksprogramming.equipment.mapper.AssignedAttributeMapper;
+import com.ksprogramming.equipment.mapper.AttributeMapper;
 import com.ksprogramming.equipment.repository.AssignedAttributeRepository;
 import com.ksprogramming.equipment.repository.AttributeRepository;
 import jakarta.transaction.Transactional;
@@ -14,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,39 +31,39 @@ public class AttributeService implements AttributeServiceInterface{
     }
 
     public List<AssignedAttributeData> findAttributesWithValue(Long id) {
-        return assignedAttributesEntityToData(assignedAttributeRepository.getAttributeWithValue(id));
+        return AssignedAttributeMapper.entitToDataList(assignedAttributeRepository.getAttributeWithValue(id));
     }
 
     public List<AttributeData> findAttributes() {
         List<Attribute> attributes = attributeRepository.findAllAttributes();
-        return attributesEntityToData(attributes);
+        return AttributeMapper.entityToDataList(attributes);
     }
 
     public List<AttributeData> findAttributesByDomain() {
         List<Attribute> attributes = attributeRepository.getAttributeByDomain();
-        return attributesEntityToData(attributes);
+        return AttributeMapper.entityToDataList(attributes);
     }
 
     public AttributeData getAttribute(Long id) {
-        AttributeData attribute = attributeEntityToData(attributeRepository.getReferenceById(id.intValue()));
+        AttributeData attribute = AttributeMapper.entityToData(attributeRepository.getReferenceById(id.intValue()));
         return attribute;
     }
 
     public void delete(Long id) {
-        AttributeData attribute = attributeEntityToData(attributeRepository.getReferenceById(id.intValue()));
+        AttributeData attribute = AttributeMapper.entityToData(attributeRepository.getReferenceById(id.intValue()));
         attribute.setRemoveDate(LocalDateTime.now());
-        attributeRepository.save(attributeDataToEntity(attribute));
+        attributeRepository.save(AttributeMapper.dataToEntity(attribute));
     }
 
     public void update(AttributeData attributeData) {
-        AttributeData attribute = attributeEntityToData(attributeRepository.getReferenceById(attributeData.getId().intValue()));
+        AttributeData attribute = AttributeMapper.entityToData(attributeRepository.getReferenceById(attributeData.getId().intValue()));
         attribute.setName(attributeData.getName());
         attribute.setType(attributeTypeByName(attributeData.getType()));
         attribute.setDomain(domainTypeByName(attributeData.getDomain()));
         attribute.setEditDate(LocalDateTime.now());
         validate(attributeData);
         validateUniqueName(attributeData);
-        List<AssignedAttributeData> assignedAttributesDataList = assignedAttributesEntityToData(assignedAttributeRepository.getAttributeWithValue(attribute.getId()));
+        List<AssignedAttributeData> assignedAttributesDataList = AssignedAttributeMapper.entitToDataList(assignedAttributeRepository.getAttributeWithValue(attribute.getId()));
         assignedAttributesDataList.stream()
                 .forEach(assignedAttributeData -> {
                     if (!assignedAttributeData.getAttribute().getType().equals(attribute.getType())) {
@@ -72,7 +72,7 @@ public class AttributeService implements AttributeServiceInterface{
                         }
                     }
                 });
-        attributeRepository.save(attributeDataToEntity(attribute));
+        attributeRepository.save(AttributeMapper.dataToEntity(attribute));
     }
 
     public AttributeData create(AttributeData attributeData) {
@@ -80,7 +80,7 @@ public class AttributeService implements AttributeServiceInterface{
         attributeData.setDomain(domainTypeByName(attributeData.getDomain()));
         validate(attributeData);
         validateUniqueName(attributeData);
-        Attribute attributeEntity = attributeRepository.save(attributeDataToEntity(attributeData));
+        Attribute attributeEntity = attributeRepository.save(AttributeMapper.dataToEntity(attributeData));
         attributeData.setId(attributeEntity.getId());
         return attributeData;
     }
@@ -90,7 +90,7 @@ public class AttributeService implements AttributeServiceInterface{
         }
     }
     private void validateUniqueName(AttributeData attributeData){
-        List<AttributeData> attributesData = attributesEntityToData(attributeRepository.getAttributeByDomain());
+        List<AttributeData> attributesData = AttributeMapper.entityToDataList(attributeRepository.getAttributeByDomain());
         attributesData.stream()
                 .forEach(attribute -> {
                     if (attribute.getId() != attributeData.getId()) {
@@ -99,19 +99,6 @@ public class AttributeService implements AttributeServiceInterface{
                         }
                     }
                 });
-    }
-
-
-
-    private List<AttributeData> attributesEntityToData(List<Attribute> attributes) {
-        List<AttributeData> attributeData = new ArrayList<>();
-        attributes.stream().forEach(attributeEntity -> {
-            attributeData.add(new AttributeData(attributeEntity.getId(), attributeEntity.getName(),
-                    AttributeType.valueOf(attributeEntity.getType()).getName(), DomainType.valueOf(attributeEntity.getDomain()).getCode(),
-                    assignedAttributesEntityToData(attributeEntity.getAssignedAttributes()),
-                    attributeEntity.getCreateDate(), attributeEntity.getEditDate(), attributeEntity.getRemoveDate()));
-        });
-        return attributeData;
     }
 
     private String attributeTypeByName(String attributeType) {
@@ -130,25 +117,5 @@ public class AttributeService implements AttributeServiceInterface{
             }
         }
         return null;
-    }
-
-    private AttributeData attributeEntityToData(Attribute attribute) {
-        return new AttributeData(attribute.getId(), attribute.getName(), attribute.getType(), attribute.getDomain()
-                , assignedAttributesEntityToData(attribute.getAssignedAttributes()), attribute.getCreateDate(), attribute.getEditDate(), attribute.getRemoveDate());
-    }
-
-    private Attribute attributeDataToEntity(AttributeData attribute) {
-        return new Attribute(attribute);
-    }
-
-    private List<AssignedAttributeData> assignedAttributesEntityToData(List<AssignedAttribute> assignedAttributes) {
-        List<AssignedAttributeData> list = new ArrayList<>();
-        assignedAttributes.stream()
-                .forEach(assignedAttribute -> {
-                    list.add(new AssignedAttributeData(assignedAttribute.getId(), assignedAttribute.getDomain(), assignedAttribute.getDomainId(),
-                            assignedAttribute.getValue(), assignedAttribute.getCreateDate(),
-                            assignedAttribute.getEditDate(), assignedAttribute.getRemoveDate()));
-                });
-        return list;
     }
 }

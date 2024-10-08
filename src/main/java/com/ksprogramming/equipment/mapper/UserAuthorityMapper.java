@@ -1,16 +1,16 @@
 package com.ksprogramming.equipment.mapper;
 
+import com.ksprogramming.equipment.api.UserAuthorityGetResponse;
+import com.ksprogramming.equipment.api.UserGetResponse;
 import com.ksprogramming.equipment.data.UserAuthorityData;
-import com.ksprogramming.equipment.entities.User;
+import com.ksprogramming.equipment.data.UserData;
 import com.ksprogramming.equipment.entities.UserAuthority;
+import com.ksprogramming.equipment.enumes.Authority;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserAuthorityMapper {
-    private Long id;
-    private User user;
-    private String authority;
 
     public static UserAuthority dataToEntity(UserAuthorityData userAuthorityData) {
         return UserAuthority.builder()
@@ -30,13 +30,32 @@ public class UserAuthorityMapper {
 
     public static List<UserAuthorityData> entityToDataList(List<UserAuthority> userAuthorityList) {
         List<UserAuthorityData> userAuthorityDataList = new ArrayList<>();
-        userAuthorityList.forEach(userAuthority -> {userAuthorityDataList.add(entityToData(userAuthority));});
+        userAuthorityList.forEach(userAuthority -> {
+            userAuthorityDataList.add(entityToData(userAuthority));
+        });
         return userAuthorityDataList;
     }
 
     public static List<UserAuthority> dataToEntityList(List<UserAuthorityData> userAuthorityDataList) {
         List<UserAuthority> userAuthorityList = new ArrayList<>();
-        userAuthorityDataList.forEach(userAuthorityData -> {userAuthorityList.add(dataToEntity(userAuthorityData));});
+        userAuthorityDataList.forEach(userAuthorityData -> {
+            userAuthorityList.add(dataToEntity(userAuthorityData));
+        });
         return userAuthorityList;
     }
+
+    public static List<UserAuthorityGetResponse> DataToGetResponse(List<UserAuthorityData> userAuthorityDataList) {
+        List<UserAuthorityGetResponse> userAuthorityGetResponseList = new ArrayList<>();
+        userAuthorityDataList.stream()
+                .forEach(authority -> {
+                    userAuthorityGetResponseList.add(UserAuthorityGetResponse.builder()
+                            .id(authority.getId())
+                            .equipmentUserGetResponse(UserMapper.dataToGetResponse(authority.getUserData()))
+                            .authority(Authority.findByCodeWithRole(authority.getAuthority()).toString())
+                            .build());
+                });
+        return userAuthorityGetResponseList;
+    }
+
+
 }

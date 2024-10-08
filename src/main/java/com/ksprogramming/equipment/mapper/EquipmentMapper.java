@@ -1,5 +1,7 @@
 package com.ksprogramming.equipment.mapper;
 
+import com.ksprogramming.equipment.api.EquipmentGetResponse;
+import com.ksprogramming.equipment.api.PictureGetResponse;
 import com.ksprogramming.equipment.data.EquipmentData;
 import com.ksprogramming.equipment.entities.Equipment;
 
@@ -45,5 +47,16 @@ public class EquipmentMapper {
             equipmentDataList.add(entityToData(equipmentData));
         });
         return equipmentDataList;
+    }
+    public static List<EquipmentGetResponse> DataToGetResponseList(List<EquipmentData> equipmentDataList) {
+        List<EquipmentGetResponse> equipments = new ArrayList<>();
+        equipmentDataList.stream()
+                .forEach(equipment -> equipments.add(new EquipmentGetResponse(equipment.getId()
+                        , UserMapper.dataToGetResponse(equipment.getUserData())
+                        , equipment.getPicture() != null? PictureMapper.DataToGetResponse(equipment.getPicture()):new PictureGetResponse()
+                        , equipment.getName()
+                        , equipment.getCreateDate()
+                        , equipment.getEditDate())));
+        return equipments;
     }
 }
