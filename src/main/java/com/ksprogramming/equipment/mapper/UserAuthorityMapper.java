@@ -1,9 +1,7 @@
 package com.ksprogramming.equipment.mapper;
 
 import com.ksprogramming.equipment.api.UserAuthorityGetResponse;
-import com.ksprogramming.equipment.api.UserGetResponse;
 import com.ksprogramming.equipment.data.UserAuthorityData;
-import com.ksprogramming.equipment.data.UserData;
 import com.ksprogramming.equipment.entities.UserAuthority;
 import com.ksprogramming.equipment.enumes.Authority;
 
@@ -28,12 +26,14 @@ public class UserAuthorityMapper {
                 .build();
     }
 
+
     public static List<UserAuthorityData> entityToDataList(List<UserAuthority> userAuthorityList) {
-        List<UserAuthorityData> userAuthorityDataList = new ArrayList<>();
-        userAuthorityList.forEach(userAuthority -> {
-            userAuthorityDataList.add(entityToData(userAuthority));
-        });
-        return userAuthorityDataList;
+        List<UserAuthorityData> list = new ArrayList<>();
+        userAuthorityList.stream()
+                .forEach(authority -> {
+                    list.add(new UserAuthorityData(authority.getAuthority()));
+                });
+        return list;
     }
 
     public static List<UserAuthority> dataToEntityList(List<UserAuthorityData> userAuthorityDataList) {

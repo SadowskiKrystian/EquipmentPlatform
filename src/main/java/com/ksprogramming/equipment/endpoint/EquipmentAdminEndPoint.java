@@ -60,7 +60,7 @@ public class EquipmentAdminEndPoint {
     }
     @GetMapping("/notifications")
     public List<NotificationGetResponse> findAllNotifications() {
-        return notificationsDataToRespone(notificationService.findAllNotifications());
+        return NotificationMapper.dataToGetRespone(notificationService.findAllNotifications());
     }
     @DeleteMapping("/notification/{id}")
     public void deleteNotification(@PathVariable("id") Long id) {
@@ -89,7 +89,7 @@ public class EquipmentAdminEndPoint {
                 request.getPasswordHash(),
                 false,
                 request.getLanguage(),
-                Common.userAuthoritiesArrayToList(request.getAuthorities()),
+                CommonData.userAuthoritiesArrayToList(request.getAuthorities()),
                 LocalDateTime.now()));
     }
 
@@ -162,9 +162,7 @@ public class EquipmentAdminEndPoint {
         try{
             ObjectMapper mapper = new ObjectMapper();
             equipmentPostRequest = mapper.readValue(json, EquipmentPostRequest.class);
-            System.out.println(equipmentPostRequest.getName());
             equipmentPostRequest.getValues().forEach(value -> System.out.println(value.getValue()));
-            System.out.println();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -174,7 +172,7 @@ public class EquipmentAdminEndPoint {
 
     @GetMapping("/equipments")
     public List<EquipmentGetResponse> findAll() {
-        return EquipmentMapper.DataToGetResponseList(equipmentService.findAll());
+        return EquipmentMapper.dataToGetResponseList(equipmentService.findAll());
     }
 
     @GetMapping("/equipments/attributes")
@@ -185,7 +183,7 @@ public class EquipmentAdminEndPoint {
     @GetMapping("/equipment/{id}")
     public EquipmentWithAttributesGetResponse get(@PathVariable Long id) {
         EquipmentsWithDetailsData equipmentsWithDetails = equipmentService.get(id);
-        return prepareEquipmentWithAttributesGetResponse(
+        return CommonData.prepareEquipmentWithAttributesGetResponse(
                 equipmentsWithDetails.getEquipment(), equipmentsWithDetails.getAttributes(), attributeService.findAttributesByDomain());
     }
 
@@ -229,18 +227,18 @@ public class EquipmentAdminEndPoint {
         return dictionariesService.getDictionary(DictionaryType.ATTRIBUTE_TYPES, Language.PL);
     }
 
-    private EquipmentWithAttributesGetResponse prepareEquipmentWithAttributesGetResponse(EquipmentData equipmentData, List<AttributeData> assignedAttributesData, List<AttributeData> attributesData) {
-        List<AttributeGetResponse> assignedAttributes = new ArrayList<>();
-        assignedAttributesData.stream()
-                .forEach(attribute -> assignedAttributes.add(new AttributeGetResponse(attribute)));
-        List<AttributeGetResponse> attributes = new ArrayList<>();
-        attributesData.stream()
-                .forEach(attribute -> {
-                    attributes.add(new AttributeGetResponse(attribute));
-                });
-        return new EquipmentWithAttributesGetResponse(new EquipmentGetResponse(equipmentData.getId(), UserMapper.dataToGetResponse(equipmentData.getUserData()),
-                equipmentData.getPicture() != null? PictureMapper.DataToGetResponse(equipmentData.getPicture()) : new PictureGetResponse(), equipmentData.getName(), equipmentData.getCreateDate(), equipmentData.getEditDate()),
-                assignedAttributes, attributes);
-    }
+//    private EquipmentWithAttributesGetResponse prepareEquipmentWithAttributesGetResponse(EquipmentData equipmentData, List<AttributeData> assignedAttributesData, List<AttributeData> attributesData) {
+//        List<AttributeGetResponse> assignedAttributes = new ArrayList<>();
+//        assignedAttributesData.stream()
+//                .forEach(attribute -> assignedAttributes.add(new AttributeGetResponse(attribute)));
+//        List<AttributeGetResponse> attributes = new ArrayList<>();
+//        attributesData.stream()
+//                .forEach(attribute -> {
+//                    attributes.add(new AttributeGetResponse(attribute));
+//                });
+//        return new EquipmentWithAttributesGetResponse(new EquipmentGetResponse(equipmentData.getId(), UserMapper.dataToGetResponse(equipmentData.getUserData()),
+//                equipmentData.getPicture() != null? PictureMapper.DataToGetResponse(equipmentData.getPicture()) : new PictureGetResponse(), equipmentData.getName(), equipmentData.getCreateDate(), equipmentData.getEditDate()),
+//                assignedAttributes, attributes);
+//    }
 
 }

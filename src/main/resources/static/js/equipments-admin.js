@@ -155,7 +155,7 @@ function sendCreateRequest() {
         values: attributeWithValueList
     }))
     $.ajax({
-        url: "/api/crs/equipment",
+        url: "/admin/api/crs/equipment",
         type:"POST",
         processData:false,
         contentType: false,
@@ -171,27 +171,6 @@ function sendCreateRequest() {
             $("#create-button").prop("disabled", false);
             displayErrorInformation(jqxhr.responseText);
         })
-
-    // $.ajax({
-    //     url: "/admin/api/crs/equipment",
-    //     method: "post",
-    //     contentType: "application/json",
-    //     data:
-    //         JSON.stringify({
-    //             name: $("#create-name").val(),
-    //             values: attributeWithValueList
-    //         })
-    // })
-    //     .done(function () {
-    //         $("#create-modal").modal('hide');
-    //         $("#operation-successful-modal").modal('show');
-    //         findEquipments();
-    //         clearCreateModal();
-    //     })
-    //     .fail(function (jqxhr, textStatus, errorThrown) {
-    //         $("#create-button").prop("disabled", false);
-    //         displayErrorInformation(jqxhr.responseText);
-    //     })
 
 }
 function cancel(){
