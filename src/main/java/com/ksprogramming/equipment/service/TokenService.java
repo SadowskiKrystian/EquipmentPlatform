@@ -6,6 +6,8 @@ import com.ksprogramming.equipment.entities.Token;
 import com.ksprogramming.equipment.entities.User;
 import com.ksprogramming.equipment.exception.ExpiredorUsedToken;
 import com.ksprogramming.equipment.exception.TokenNotFound;
+import com.ksprogramming.equipment.mapper.TokenMapper;
+import com.ksprogramming.equipment.mapper.UserMapper;
 import com.ksprogramming.equipment.repository.TokenRepository;
 import org.springframework.stereotype.Service;
 
@@ -25,31 +27,18 @@ public class TokenService implements TokenServiceInterface{
     public TokenData findToken(String token) {
         TokenData tokenData = verifyTokenExistence(tokenRepository.findByToken(token));
         verifyTokenValidity(tokenData);
-        return tokenEntityToData(tokenRepository.findByToken(token));
+        return TokenMapper.entityToData(tokenRepository.findByToken(token));
 
 
     }
     public TokenData updateToken(TokenData tokenData) {
-         return tokenEntityToData(tokenRepository.save(tokenDataToEntity(tokenData)));
+         return TokenMapper.entityToData(tokenRepository.save(TokenMapper.dataToEntity(tokenData)));
     }
     public TokenData createToken(UserData userData){
-        return tokenEntityToData(tokenRepository.save(new Token(userDataToEntity(userData), UUID.randomUUID().toString(), LocalDateTime.now().plusHours(1L), false)));
-    }
-    private Token tokenDataToEntity(TokenData tokenData) {
-        return new Token(tokenData.getId(), userDataToEntity(tokenData.getUserData()), tokenData.getValue(), tokenData.getExpirationDatetime(), tokenData.getUsed());
+        return TokenMapper.entityToData(tokenRepository.save(new Token(UserMapper.dataToEntity(userData), UUID.randomUUID().toString(),
+                LocalDateTime.now().plusHours(1L), false)));
     }
 
-    private User userDataToEntity(UserData userData) {
-        return new User(userData.getId(), userData.getLogin());
-    }
-
-    private TokenData tokenEntityToData(Token byToken) {
-        return new TokenData(byToken.getId(), userEntityToData(byToken.getUser()), byToken.getValue(), byToken.getUsed(), byToken.getExpirationDate());
-    }
-
-    private UserData userEntityToData(User user) {
-        return new UserData(user.getId(), user.getLogin());
-    }
     private void verifyTokenValidity(TokenData tokenData) {
         if (tokenStateService.isTokenExpired(tokenData)) {
             throw new ExpiredorUsedToken("Token has expired ");
@@ -57,11 +46,12 @@ public class TokenService implements TokenServiceInterface{
             throw new ExpiredorUsedToken("Token has used ");
         }
     }
+
     private TokenData verifyTokenExistence(Token token) {
         if (token == null) {
             throw new TokenNotFound("Token not found");
         } else {
-            return tokenEntityToData(token);
+            return TokenMapper.entityToData(token);
         }
     }
 }

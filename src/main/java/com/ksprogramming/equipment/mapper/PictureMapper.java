@@ -1,5 +1,6 @@
 package com.ksprogramming.equipment.mapper;
 
+import com.ksprogramming.equipment.api.PictureGetResponse;
 import com.ksprogramming.equipment.data.PictureData;
 import com.ksprogramming.equipment.entities.Picture;
 
@@ -38,4 +39,8 @@ public class PictureMapper {
        pictureList.forEach(picture -> {pictureDataList.add(entityToData(picture));});
        return pictureDataList;
    }
+
+    public static PictureGetResponse DataToGetResponse(PictureData picture) {
+        return new PictureGetResponse(picture.getId(), picture.getPath(), picture.getCreateDate(), picture.getUpdateDate());
+    }
 }

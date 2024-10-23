@@ -1,14 +1,14 @@
 package com.ksprogramming.equipment.endpoint;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ksprogramming.equipment.api.*;
 import com.ksprogramming.equipment.data.*;
 import com.ksprogramming.equipment.enumes.Authority;
+import com.ksprogramming.equipment.mapper.*;
 import com.ksprogramming.equipment.service.*;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,9 +16,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/crs")
@@ -54,7 +52,7 @@ public class EquipmentEndPoint {
     }
     @GetMapping("/notifications")
     public List<NotificationGetResponse> findNotificationByReceiverId() {
-       return notificationsDataToResponse(notificationService.findNotificationsByReceiverId());
+       return NotificationMapper.dataToGetRespone(notificationService.findNotificationsByReceiverId());
     }
     @PutMapping("/notification/{id}")
     public void updateNotification(@PathVariable("id") Long id) {
@@ -108,7 +106,7 @@ public class EquipmentEndPoint {
     @GetMapping("equipment/{id}")
     public EquipmentWithAttributesGetResponse getEquipment(@PathVariable Long id) {
         EquipmentsWithDetailsData equipmentWithDetails = equipmentService.get(id);
-        return prepareEquipmentWithAttributesGetResponse(
+        return CommonData.prepareEquipmentWithAttributesGetResponse(
                     equipmentWithDetails.getEquipment(), equipmentWithDetails.getAttributes(), attributeService.findAttributesByDomain());
 
     }
@@ -144,7 +142,7 @@ public class EquipmentEndPoint {
             }
         }
         EquipmentData equipment = new EquipmentData(equipmentPutRequest.getId(), userService.getLoggedUser(), picture, equipmentPutRequest.getName(), LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
-        equipmentService.update(equipment, valuesPutRequestToData(equipmentPutRequest.getValues()));
+        equipmentService.update(equipment, ValueMapper.putRequestToDataList(equipmentPutRequest.getValues()));
 
     }
     @PostMapping("/equipment")
@@ -166,81 +164,31 @@ public class EquipmentEndPoint {
            throw new RuntimeException(e);
         }
         EquipmentData equipment = new EquipmentData(userService.getLoggedUser(), picture, equipmentPostRequest.getName(), LocalDateTime.now());
-        equipmentService.create(equipment, valuesPostRequestToData(equipmentPostRequest.getValues()));
+        equipmentService.create(equipment, ValueMapper.postRequestToDataList(equipmentPostRequest.getValues()));
     }
     @GetMapping("/equipments")
-    public List<EquipmentGetResponse> findAll(@RequestParam(name = "name", required = false) String name) {
-        return equipmentsDataToEquipmentsGetResponse(name);
+    public List<EquipmentGetResponse> findAllByLogin(@RequestParam(name = "name", required = false) String name) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return EquipmentMapper.dataToGetResponseList(equipmentService.findByLogin(name));
     }
     @GetMapping("/equipments/attributes")
     public List<AttributeGetResponse> findAllAttributes() {
-        return attributesDataToResponse(attributeService.findAttributesByDomain());
-    }
-    private List<NotificationGetResponse> notificationsDataToResponse(List<NotificationData> notificationsByReceiverId) {
-        List<NotificationGetResponse> notifications = new ArrayList<>();
-        notificationsByReceiverId.forEach(notification -> notifications.add(new NotificationGetResponse(notification.getId(), notification.getSenderLogin(), userDataToResponse(notification.getReceiverId()),
-                notification.getTitle(), notification.getContent(), notification.getCreateDateTime(), notification.getSeenDateTime())));
-        return notifications;
-    }
-    private UserGetResponse userDataToResponse(UserData user) {
-        return new UserGetResponse(user.getId(), user.getLogin(), user.getPasswordHash(),
-                user.getEmailConfirmed(), user.getLanguage(), user.getRegistrationDate());
-    }
-    private List<ValueData> valuesPostRequestToData(List<ValuePostRequest> values) {
-        List<ValueData> list = new ArrayList<>();
-        values.forEach(value -> {
-            list.add(new ValueData(value.getId(), value.getValue(), value.getAttributeName()));
-        });
-        return list;
-    }
-    private List<ValueData> valuesPutRequestToData(List<ValuePutRequest> values) {
-        List<ValueData> list = new ArrayList<>();
-        values.forEach(value -> {
-            list.add(new ValueData(value.getId(), value.getValue(), value.getAttributeName()));
-        });
-        return list;
-    }
-    private EquipmentWithAttributesGetResponse prepareEquipmentWithAttributesGetResponse(EquipmentData equipmentData, List<AttributeData> assignedAttributesData, List<AttributeData> attributesData) {
-        List<AttributeGetResponse> assignedAttributes = new ArrayList<>();
-        assignedAttributesData.stream()
-                .forEach(attribute -> assignedAttributes.add(new AttributeGetResponse(attribute)));
-        List<AttributeGetResponse> attributes = new ArrayList<>();
-        attributesData.stream()
-                .forEach(attribute -> {
-                    attributes.add(new AttributeGetResponse(attribute));
-                });
-        return new EquipmentWithAttributesGetResponse(new EquipmentGetResponse(equipmentData.getId(), equipmentUserDataToGetResponse(equipmentData.getUserData()),
-                equipmentData.getPicture() != null?pictureDataToGetResponse(equipmentData.getPicture()) : new PictureGetResponse(), equipmentData.getName(), equipmentData.getCreateDate(), equipmentData.getEditDate()),
-                assignedAttributes, attributes);
-
+        return AttributeMapper.dataToGetResponseList(attributeService.findAttributesByDomain());
     }
 
-    private PictureGetResponse pictureDataToGetResponse(PictureData picture) {
-        return new PictureGetResponse(picture.getId(), picture.getPath(), picture.getCreateDate(), picture.getUpdateDate());
-    }
+//    private EquipmentWithAttributesGetResponse prepareEquipmentWithAttributesGetResponse(EquipmentData equipmentData, List<AttributeData> assignedAttributesData, List<AttributeData> attributesData) {
+//        List<AttributeGetResponse> assignedAttributes = new ArrayList<>();
+//        assignedAttributesData.stream()
+//                .forEach(attribute -> assignedAttributes.add(new AttributeGetResponse(attribute)));
+//        List<AttributeGetResponse> attributes = new ArrayList<>();
+//        attributesData.stream()
+//                .forEach(attribute -> {
+//                    attributes.add(new AttributeGetResponse(attribute));
+//                });
+//        return new EquipmentWithAttributesGetResponse(new EquipmentGetResponse(equipmentData.getId(), UserMapper.dataToGetResponse(equipmentData.getUserData()),
+//                equipmentData.getPicture() != null? PictureMapper.DataToGetResponse(equipmentData.getPicture()) : new PictureGetResponse(), equipmentData.getName(), equipmentData.getCreateDate(), equipmentData.getEditDate()),
+//                assignedAttributes, attributes);
+//
+//    }
 
-    private List<EquipmentGetResponse> equipmentsDataToEquipmentsGetResponse(String name) {
-        List<EquipmentGetResponse> equipments = new ArrayList<>();
-        equipmentService.findByLogin(name).stream()
-                .forEach(equipment -> equipments.add(new EquipmentGetResponse(equipment.getId()
-                        , equipmentUserDataToGetResponse(equipment.getUserData())
-                        , equipment.getPicture() != null?pictureDataToGetResponse(equipment.getPicture()):new PictureGetResponse()
-                        , equipment.getName()
-                        , equipment.getCreateDate()
-                        , equipment.getEditDate())));
-
-        return equipments;
-    }
-    private List<AttributeGetResponse> attributesDataToResponse(List<AttributeData> attributesData) {
-        List<AttributeGetResponse> attributes = new ArrayList<>();
-        attributesData.stream()
-                .forEach(attribute -> {
-                    attributes.add(new AttributeGetResponse(attribute));
-                });
-        return attributes;
-    }
-    private UserGetResponse equipmentUserDataToGetResponse(UserData userData) {
-        return new UserGetResponse(userData.getId(), userData.getLogin(), userData.getPasswordHash(),
-                userData.getEmailConfirmed(), userData.getLanguage(), userData.getRegistrationDate());
-    }
 }

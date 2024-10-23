@@ -1,5 +1,6 @@
 package com.ksprogramming.equipment.mapper;
 
+import com.ksprogramming.equipment.api.AssignedAttributeGetResponse;
 import com.ksprogramming.equipment.data.AssignedAttributeData;
 import com.ksprogramming.equipment.entities.AssignedAttribute;
 
@@ -48,5 +49,14 @@ public class AssignedAttributeMapper {
             assignedAttributeDataList.add(entityToData(assignedAttributeData));
         });
         return assignedAttributeDataList;
+    }
+
+    public static List<AssignedAttributeGetResponse> dataToGetResponseList(List<AssignedAttributeData> assignedAttributesData) {
+        List<AssignedAttributeGetResponse> list = new ArrayList<>();
+        assignedAttributesData.stream()
+                .forEach(assignedAttributeData -> {
+                    list.add(new AssignedAttributeGetResponse(assignedAttributeData));
+                });
+        return list;
     }
 }
